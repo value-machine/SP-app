@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.1] - 2026-03-05
+
+### Changed
+
+- **Finish Command Debug Pattern Update**: Clarified requirements for adding debug patterns to `debug.md` when a debugging session results in a fix
+  - Patterns must be captured at bug-class level (not incident-specific)
+  - Format: Symptom class → Likely cause classes → Discriminator question → First diagnostic move
+  - Prefer cross-feature language (race conditions, stale state, config drift, schema mismatch, effect dependency loops)
+  - Added pattern quality gate: recognizable from symptoms, falsifiable check, project-agnostic benefit
+
 ## [0.12.0] - 2026-02-26
 
 ### Added
