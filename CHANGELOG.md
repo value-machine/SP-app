@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Bug Dashboard Implementation Plan**: Added planning documentation in `documentation/jobs/temp_job_bug_dashboard/`
+
 ## [0.12.1] - 2026-03-05
 
 ### Changed
