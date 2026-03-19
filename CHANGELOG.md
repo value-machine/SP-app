@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Bug Dashboard Implementation Plan**: Added planning documentation in `documentation/jobs/temp_job_bug_dashboard/`
 
+### Changed
+
+- **Bug Dashboard Implementation Plan**: Updated with environment-tag scope (local dev + experimental + staging + production) and migration-deploy todo
+
 ## [0.12.1] - 2026-03-05
 
 ### Changed

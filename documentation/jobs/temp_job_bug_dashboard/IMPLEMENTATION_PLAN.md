@@ -1,6 +1,6 @@
 ---
 name: App Error Logging System
-overview: "Streamline-plan: log bestaande app-errors naar Supabase met hash-deduplicatie, toon een actiegerichte triage-view in /admin/debug, en gebruik handmatig Cursor command /bugs om open bug-clusters in mensentaal te prioriteren en direct te fixen."
+overview: "Streamline-plan: log bestaande app-errors naar Supabase met hash-deduplicatie voor local dev + experimental + staging + production (met environment-tag), toon een actiegerichte triage-view in /admin/debug, en gebruik handmatig Cursor command /bugs om open bug-clusters in mensentaal te prioriteren en direct te fixen."
 todos:
   - id: migration
     content: Schrijf Supabase migratie voor error_logs en bugs tabellen met RLS policies
@@ -25,6 +25,9 @@ todos:
     status: pending
   - id: retention
     content: Voeg 90-dagen retentie toe voor error_logs (cleanup job)
+    status: pending
+  - id: migration-deploy
+    content: Draai en deploy migraties zelf naar omgevingen waar nodig
     status: pending
 isProject: false
 ---
@@ -76,21 +79,21 @@ flowchart TD
 
 ## Fase 1 — Supabase Schema (Streamline)
 
-Twee nieuwe tabellen via een migratie in `supabase/migrations/`:
+Drie nieuwe tabellen via een migratie in `supabase/migrations/`:
 
 `**error_logs**` — dedup-clusters + telling:
 
-- `id`, `hash` (uniek), `message`, `stack`, `context`, `type`, `route`, `user_id`, `browser_info`, `count`, `first_seen_at`, `last_seen_at`, `app_version`, `status` (open / muted / resolved)
+- `id`, `hash` (uniek), `message`, `stack`, `context`, `type`, `route`, `user_id`, `browser_info`, `count`, `first_seen_at`, `last_seen_at`, `app_version`, `environment` (`local_dev` / `experimental` / `staging` / `production`), `status` (open / muted / resolved), `resolved` (boolean)
 
 `**bugs**` — gegroepeerde / bevestigde bugs (beheerd door Cursor):
 
-- `id`, `title` (mensentaal), `description`, `status` (open / in_progress / fixed), `priority`, `fix_notes`, `created_at`, `updated_at`
+- `id`, `title` (mensentaal), `description`, `status` (open / in_progress / fixed), `resolved` (boolean), `priority`, `fix_notes`, `created_at`, `updated_at`
 
 `**bug_error_hashes**` — relatie: 1 bug naar meerdere error-hashes:
 
 - `id`, `bug_id` (FK), `error_log_id` (FK), `created_at`
 
-RLS: enkel `service_role` kan schrijven naar `error_logs`. Admin-users kunnen `bugs` lezen en updaten.
+RLS + write-pad: clients schrijven niet direct naar `error_logs`, maar via een `SECURITY DEFINER` RPC (`upsert_error_log`) die alleen voor `authenticated` executebaar is. Zo werkt logging voor alle ingelogde users in local dev, experimental, staging en production. Admin-users kunnen `bugs` lezen en updaten.
 
 Retentie: `error_logs` records ouder dan **90 dagen** worden verwijderd via scheduled cleanup.
 
@@ -103,7 +106,8 @@ Nieuw bestand: `src/shared/services/errorLoggingService.ts`
 - Doet een Supabase **upsert op hash**: als de error al bestaat → `count++` en `last_seen_at` updaten; nieuw → insert
 - Voegt toe: huidige route (`window.location.pathname`), `user_id` uit Supabase auth, browser info
 - Faalt **stilletjes** (geen recursieve logging) — wrap in `try/catch` zonder re-throw
-- Conditie: alleen loggen in productie + staging (niet in `import.meta.env.DEV`)
+- Conditie: loggen in alle omgevingen (local dev + experimental + staging + production), maar met expliciete `environment` waarde in de DB per logregel
+- Bepaal `environment` in client op basis van hostname/build constants (bijv. `localhost` => `local_dev`, `--experimental` host => `experimental`, staging build => `staging`, anders `production`)
 
 ## Fase 3 — Error Sources aansluiten (bestaande bronnen eerst)
 
@@ -152,12 +156,13 @@ Dit is een **Cursor Slash Command** instructie die de developer handmatig aanroe
 3. Laat gebruiker prioriteit kiezen voor de top-clusters
 4. Maak/werk `bugs` records bij en koppel meerdere hashes via `bug_error_hashes`
 5. Voor geselecteerde bug: analyseer stack + code, pas de fix direct toe
-6. Werk `bugs.status` en `fix_notes` bij
-7. Zet gerelateerde `error_logs.status` op `resolved` waar passend
+6. Werk `bugs.status`, `bugs.resolved` en `fix_notes` bij
+7. Zet gerelateerde `error_logs.status` op `resolved` en `error_logs.resolved = true` waar passend
 
 ## Bestandsoverzicht
 
 - `supabase/migrations/[timestamp]_add_error_logging.sql` — nieuw
+- `supabase/migrations/[timestamp]_add_error_logging_resolved_and_environment.sql` — nieuw/aanvullend (als schema al live staat)
 - `src/shared/services/errorLoggingService.ts` — nieuw
 - `src/shared/utils/globalErrorHandler.ts` — nieuw
 - `src/main.tsx` — aanpassen (global handler registreren)
@@ -166,6 +171,14 @@ Dit is een **Cursor Slash Command** instructie die de developer handmatig aanroe
 - `src/pages/admin/debug/DebugToolsPage.tsx` — aanpassen (Bug Triage tab toevoegen)
 - `src/features/admin/debug/` — nieuwe componenten voor de bug log UI
 - `.cursor/instructions/bugs.md` — nieuw (slash command instructie)
+
+## Fase 6 — Migratie uitvoeren (verantwoordelijkheid agent)
+
+- Agent draait/deployt de benodigde Supabase migraties zelf naar de doelomgeving(en).
+- Verifieer na deploy dat:
+  - `error_logs.environment` gevuld wordt
+  - `resolved` booleans op `bugs` en `error_logs` bestaan en synchroniseren met status-updates
+  - local dev en experimental writes daadwerkelijk in de DB landen met de juiste `environment` tag
 
 ## Finish regel (nieuwe functionaliteit check, verplicht)
 
