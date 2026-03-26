@@ -7,13 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-03-26
+
 ### Added
 
-- **Bug Dashboard Implementation Plan**: Added planning documentation in `documentation/jobs/temp_job_bug_dashboard/`
+- **Agent workflow (Cursor)**: Commands `prime`, `plan`, `implement`, `validate`, and `quick-piv` under `.cursor/commands/` for session context, formal PIV cycle, and lightweight PIV
+- **Learn skill**: Project skill `.cursor/skills/learn/SKILL.md` to persist lessons into rules/commands; `documentation/DOC_INDEX.md` quick link
+- **Structure whitelist**: `.cursor/skills/*/` with `SKILL.md` in `projectStructure.config.cjs`
+- **Bug Dashboard Implementation Plan**: Planning documentation in `documentation/jobs/temp_job_bug_dashboard/`
 
 ### Changed
 
-- **Bug Dashboard Implementation Plan**: Updated with environment-tag scope (local dev + experimental + staging + production) and migration-deploy todo
+- **Doc reference validation**: `scripts/validate-cursor-doc-references.js` also scans `.cursor/skills`; strips fenced code blocks before inline backtick scan; resets regex per file; skips multiline backtick spans
+- **Rules**: Architecture and code-style point complexity/refactor workflow to `.cursor/commands/optimize2.md`; file-placement temporary-doc examples use placeholders so examples are not mistaken for real paths
+- **Bug Dashboard Implementation Plan**: Environment-tag scope (local dev + experimental + staging + production) and migration-deploy todo
 
 ## [0.12.1] - 2026-03-05
 
