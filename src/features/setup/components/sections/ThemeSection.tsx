@@ -126,7 +126,7 @@ const ThemeDialogContent = ({
             alignItems: "flex-start",
           },
           "& .MuiInputBase-input": {
-            fontFamily: (theme) => theme.typography.fontFamily, // Use Montserrat for consistency
+            fontFamily: (theme) => theme.typography.fontFamily,
             fontSize: (theme) => theme.typography.body2.fontSize,
             overflow: "auto !important",
             height: "100% !important",

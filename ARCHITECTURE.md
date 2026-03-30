@@ -39,7 +39,7 @@ src/
 │   ├── types/           # Shared types
 │   ├── utils/           # Shared utility functions
 │   └── theme/           # MUI theme configuration
-│       ├── defaultTheme.ts    # Default theme (preserved)
+│       ├── defaultTheme.ts    # SP.nl default MUI theme (sp-styleguide tokens)
 │       ├── themeLoader.ts      # Theme loading and persistence
 │       └── theme.ts            # Theme export (uses loader)
 └── utils/               # Utility functions

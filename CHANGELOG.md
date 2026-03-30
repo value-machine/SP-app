@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-03-30
+
+### Changed
+
+- **Theme**: Default MUI theme aligned with SP.nl visual identity from `sp-styleguide.html` (Barlow / Barlow Condensed, palette, flat zero-radius components); `index.html` font imports and document title updated; setup Theme section comment cleanup
+
 ## [0.13.0] - 2026-03-26
 
 ### Added

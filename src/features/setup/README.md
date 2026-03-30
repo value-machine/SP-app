@@ -9,6 +9,8 @@ Configuration wizard for Supabase, Airtable, hosting, and theme. Dev-only capabi
 - Config sync to `app.config.json` for agent discoverability
 - Optional finish-setup flow (removes setup code when complete)
 
+The **Theme** step still allows an optional JSON override in `localStorage` via `themeLoader`; the built-in default is the SP.nl palette and typography from the repo root `sp-styleguide.html` (`src/shared/theme/defaultTheme.ts`).
+
 ## Structure
 
 | Layer | Path | Purpose |

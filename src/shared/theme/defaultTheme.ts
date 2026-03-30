@@ -1,50 +1,77 @@
 /**
- * MUI Theme Configuration
+ * MUI Theme Configuration — SP.nl visual identity
  *
- * This file contains ALL app styling, colors, typography, and component overrides.
- * It is the single source of truth for visual design in the application.
+ * Derived from `sp-styleguide.html` (Barlow / Barlow Condensed stand-ins for
+ * Helvetica Inserat / Helvetica Neue). Single source of truth for app styling.
  *
- * Structure:
- * - palette: All color definitions (primary, secondary, background, text, etc.)
- * - typography: Font families, sizes, weights for all text elements
- * - components: MUI component style overrides
- *
- * Principles:
- * - Use palette references instead of hardcoded colors where possible
- * - All component styling should be defined here, not in individual components
- * - Use sx prop in components only for layout/spacing, not colors/styling
+ * Principles: zero border-radius, flat surfaces (no gradients/shadows on controls),
+ * uppercase display type, 8pt spacing rhythm.
  */
 
-import { createTheme, ThemeOptions, Theme, alpha } from "@mui/material/styles";
+import { createTheme, ThemeOptions, Theme, alpha, Shadows } from "@mui/material/styles";
 
-// Color constants - define once, reference everywhere
+/** Body: Barlow. Display: Barlow Condensed (matches styleguide fallbacks). */
+const FONT_BODY = "'Barlow', 'Helvetica Neue', Helvetica, sans-serif";
+const FONT_HEADER = "'Barlow Condensed', 'Helvetica Inserat', Tahoma, sans-serif";
+
+// Tokens from sp-styleguide.html :root
 const COLORS = {
-  primary: "#CF13B3",
-  secondary: "#E6196B",
+  primary: {
+    main: "#e9161d",
+    dark: "#b3050f",
+    light: "#fc888f",
+  },
+  secondary: {
+    main: "#7bc7c3",
+    dark: "#33b3a6",
+    light: "#b3f3ec",
+  },
   background: {
-    default: "#070614",
-    paper: "#1C1B29",
+    default: "#ffffff",
+    paper: "#ffffff",
+    muted: "#f2f2f2",
   },
   text: {
-    primary: "#ffffff",
-    secondary: "#F5F5F7",
+    primary: "#141414",
+    secondary: "#777777",
+    disabled: "#afafaf",
   },
-  gradient: {
-    start: "#8D0BD1",
-    end: "#CF13B3",
+  border: {
+    subtle: "#eeeeee",
+    input: "#cbcbcb",
   },
+  grey: {
+    80: "#1f1f1f",
+    black: "#000000",
+  },
+  success: "#009944",
+  error: "#cf000f",
 } as const;
+
+const SP_SHADOWS = Array(25).fill("none") as Shadows;
 
 export const defaultThemeOptions: ThemeOptions = {
   palette: {
-    mode: "dark",
+    mode: "light",
     primary: {
-      main: COLORS.primary,
+      main: COLORS.primary.main,
+      dark: COLORS.primary.dark,
+      light: COLORS.primary.light,
+      contrastText: "#ffffff",
     },
     secondary: {
-      main: COLORS.secondary,
-      light: "rgba(230, 25, 107, 0.2)",
-      dark: "#C0145A",
+      main: COLORS.secondary.main,
+      dark: COLORS.secondary.dark,
+      light: COLORS.secondary.light,
+      contrastText: COLORS.text.primary,
+    },
+    error: {
+      main: COLORS.error,
+      contrastText: "#ffffff",
+    },
+    success: {
+      main: COLORS.success,
+      contrastText: "#ffffff",
     },
     background: {
       default: COLORS.background.default,
@@ -53,56 +80,143 @@ export const defaultThemeOptions: ThemeOptions = {
     text: {
       primary: COLORS.text.primary,
       secondary: COLORS.text.secondary,
+      disabled: COLORS.text.disabled,
+    },
+    divider: COLORS.border.subtle,
+    action: {
+      hover: alpha(COLORS.text.primary, 0.06),
+      selected: alpha(COLORS.primary.main, 0.12),
+    },
+  },
+  shape: {
+    borderRadius: 0,
+  },
+  shadows: SP_SHADOWS,
+  transitions: {
+    duration: {
+      standard: 500,
+    },
+    easing: {
+      easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
     },
   },
   typography: {
-    fontFamily: "Montserrat, sans-serif",
+    fontFamily: FONT_BODY,
+    fontWeightLight: 400,
+    fontWeightRegular: 400,
+    fontWeightMedium: 700,
+    fontWeightBold: 700,
     h1: {
-      fontFamily: "Montserrat, sans-serif",
-      fontWeight: 700,
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "5rem",
+      lineHeight: 1.1,
+      letterSpacing: "-0.5px",
+      textTransform: "uppercase",
+      color: COLORS.text.primary,
     },
     h2: {
-      fontFamily: "Montserrat, sans-serif",
-      fontWeight: 700,
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "4.5rem",
+      lineHeight: 1.1,
+      textTransform: "uppercase",
+      color: COLORS.text.primary,
     },
     h3: {
-      fontFamily: "Montserrat, sans-serif",
-      fontWeight: 700,
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "3.5rem",
+      lineHeight: 1.15,
+      textTransform: "uppercase",
+      color: COLORS.text.primary,
     },
     h4: {
-      fontFamily: "Montserrat, sans-serif",
-      fontWeight: 700,
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "2.5rem",
+      lineHeight: 1.2,
+      textTransform: "uppercase",
+      color: COLORS.text.primary,
     },
     h5: {
-      fontFamily: "Montserrat, sans-serif",
-      fontWeight: 700,
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "2rem",
+      lineHeight: 1.25,
+      textTransform: "uppercase",
+      color: COLORS.text.primary,
     },
     h6: {
-      fontFamily: "Montserrat, sans-serif",
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "1.5rem",
+      lineHeight: 1.3,
+      textTransform: "uppercase",
+      color: COLORS.text.primary,
+    },
+    subtitle1: {
+      fontFamily: FONT_BODY,
       fontWeight: 700,
+      fontSize: "1.25rem",
+      lineHeight: 1.5,
+      color: COLORS.text.primary,
     },
-    // Use MUI's built-in body2 variant for code text (0.875rem)
-    // Keep Montserrat for consistency across the app
-    body2: {
+    subtitle2: {
+      fontFamily: FONT_BODY,
+      fontWeight: 400,
       fontSize: "0.875rem",
+      lineHeight: 1.5,
+      color: COLORS.text.secondary,
     },
-    // Use MUI's built-in caption variant for small text
-    // Customize fontSize to 0.65rem for small chips
+    body1: {
+      fontFamily: FONT_BODY,
+      fontWeight: 400,
+      fontSize: "1rem",
+      lineHeight: 1.5,
+    },
+    body2: {
+      fontFamily: FONT_BODY,
+      fontWeight: 400,
+      fontSize: "0.875rem",
+      lineHeight: 1.5,
+      color: COLORS.text.secondary,
+    },
+    button: {
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "1.25rem",
+      lineHeight: 1.2,
+      letterSpacing: "0.5px",
+      textTransform: "uppercase",
+    },
     caption: {
-      fontSize: "0.65rem",
+      fontFamily: FONT_BODY,
+      fontSize: "0.75rem",
+      lineHeight: 1.5,
+      color: COLORS.text.secondary,
+    },
+    overline: {
+      fontFamily: FONT_HEADER,
+      fontWeight: 900,
+      fontSize: "0.75rem",
+      lineHeight: 1.5,
+      letterSpacing: "0.125em",
+      textTransform: "uppercase",
+      color: COLORS.text.secondary,
     },
   },
   components: {
-    // AppBar styling
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: "background.paper",
-          color: "text.primary",
+          backgroundColor: COLORS.background.default,
+          color: COLORS.text.primary,
+          boxShadow: "none",
+          borderBottom: `1px solid ${COLORS.border.subtle}`,
         },
       },
     },
-    // Toolbar styling
     MuiToolbar: {
       styleOverrides: {
         root: {
@@ -110,110 +224,147 @@ export const defaultThemeOptions: ThemeOptions = {
         },
       },
     },
-    // Link styling - handles all anchor tags and Link components
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+        square: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
+        },
+      },
+    },
+    MuiCard: {
+      defaultProps: {
+        elevation: 0,
+        square: true,
+      },
+    },
     MuiLink: {
       styleOverrides: {
-        root: {
-          color: "text.primary",
+        root: ({ theme }: { theme: Theme }) => ({
+          fontFamily: FONT_HEADER,
+          fontWeight: 900,
+          fontSize: "1.25rem",
+          textTransform: "uppercase",
+          color: theme.palette.text.primary,
           textDecoration: "none",
+          borderBottom: `2px solid ${theme.palette.text.primary}`,
+          paddingBottom: "2px",
+          transition: theme.transitions.create(["color", "border-color"], {
+            duration: 500,
+          }),
           "&:hover": {
-            color: "primary.main",
-            textDecoration: "none",
+            color: theme.palette.primary.main,
+            borderBottomColor: theme.palette.primary.main,
           },
-        },
+        }),
       },
     },
-    // Button styling
-    // All button styling is centralized here. Variants determine colors automatically:
-    // - contained: uses primary color (main actions)
-    // - outlined: uses white color (secondary actions)
-    // - text: uses primary color (text buttons)
-    // Components should NOT specify color prop - variant handles it.
     MuiButton: {
       defaultProps: {
-        color: "primary", // Default color for all buttons
+        color: "primary",
+        disableElevation: true,
       },
       styleOverrides: {
         root: {
-          borderRadius: 32,
-          height: 48,
-          padding: "8px 24px",
+          borderRadius: 0,
+          boxShadow: "none",
+          padding: "12px 24px",
+          minHeight: 48,
+          transition: "background-color 500ms ease, color 500ms ease, border-color 500ms ease",
         },
-        // Contained variant: primary color (main actions)
         contained: {
-          background: `linear-gradient(45deg, ${COLORS.gradient.start} 0%, ${COLORS.primary} 30%, ${COLORS.gradient.start} 60%, ${COLORS.primary} 90%, ${COLORS.gradient.start} 100%)`,
-          backgroundSize: "200% 200%",
-          backgroundPosition: "0% 50%",
-          border: 0,
-          boxShadow: "0 3px 5px 2px rgba(0, 0, 0, 0.4)",
-          color: COLORS.text.primary,
-          transition: "background-position 0.6s ease",
+          boxShadow: "none",
           "&:hover": {
-            backgroundPosition: "100% 50%",
-          },
-          "&:active": {
-            boxShadow: "0 2px 4px 1px rgba(0, 0, 0, 0.5)",
+            boxShadow: "none",
           },
         },
-        // Text variant: primary color
-        text: {
-          color: COLORS.primary,
+        containedPrimary: {
+          backgroundColor: COLORS.primary.main,
+          color: "#ffffff",
           "&:hover": {
-            backgroundColor: "rgba(207, 19, 179, 0.1)",
+            backgroundColor: COLORS.primary.dark,
           },
         },
-        // Outlined variant: white color (secondary actions)
-        // On hover, gradient slides from transparent to white, text changes to dark
-        // Background size ensures gradient is only visible during transition
-        outlined: {
-          borderColor: COLORS.text.primary,
+        containedSecondary: {
+          backgroundColor: COLORS.secondary.main,
           color: COLORS.text.primary,
-          backgroundColor: "transparent",
-          position: "relative",
-          overflow: "hidden",
-          isolation: "isolate",
-          transition: "color 0.6s ease",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `linear-gradient(45deg, transparent 0%, transparent 45%, ${COLORS.text.primary} 75%, ${COLORS.text.primary} 100%)`,
-            backgroundSize: "250% 250%",
-            backgroundPosition: "0% 50%",
-            transition: "background-position 0.6s ease",
-            zIndex: -1,
-            borderRadius: "inherit",
-          },
           "&:hover": {
-            color: COLORS.background.default,
-            "&::before": {
-              backgroundPosition: "100% 50%",
+            backgroundColor: COLORS.secondary.dark,
+            color: "#ffffff",
+          },
+        },
+        outlined: ({ theme }: { theme: Theme }) => ({
+          borderWidth: 2,
+          "&.MuiButton-colorInherit": {
+            borderColor: theme.palette.text.primary,
+            color: theme.palette.text.primary,
+            "&:hover": {
+              borderColor: theme.palette.text.primary,
+              backgroundColor: theme.palette.text.primary,
+              color: theme.palette.background.default,
             },
           },
-        },
+          "&.MuiButton-colorPrimary": {
+            borderColor: theme.palette.primary.main,
+            color: theme.palette.primary.main,
+            "&:hover": {
+              borderColor: theme.palette.primary.dark,
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+            },
+          },
+          "&.MuiButton-colorSecondary": {
+            borderColor: theme.palette.secondary.main,
+            color: theme.palette.secondary.dark,
+            "&:hover": {
+              borderColor: theme.palette.secondary.dark,
+              backgroundColor: theme.palette.secondary.main,
+              color: theme.palette.text.primary,
+            },
+          },
+        }),
+        text: ({ theme }: { theme: Theme }) => ({
+          color: theme.palette.primary.main,
+          "&:hover": {
+            backgroundColor: alpha(theme.palette.primary.main, 0.08),
+          },
+        }),
+        colorInherit: ({ theme }: { theme: Theme }) => ({
+          ...(theme.palette.mode === "light"
+            ? {
+                "&.MuiButton-contained": {
+                  backgroundColor: COLORS.grey[80],
+                  color: "#ffffff",
+                  "&:hover": {
+                    backgroundColor: COLORS.grey.black,
+                  },
+                },
+              }
+            : {}),
+        }),
       },
     },
-    // CssBaseline customization - handles global styles
     MuiCssBaseline: {
       styleOverrides: {
         code: ({ theme }: { theme: Theme }) => ({
-          fontFamily: theme.typography.fontFamily, // Use Montserrat for consistency
-          backgroundColor: theme.palette.background.default,
+          fontFamily: theme.typography.fontFamily,
+          backgroundColor: COLORS.background.muted,
           color: theme.palette.text.primary,
+          borderRadius: 0,
         }),
         pre: ({ theme }: { theme: Theme }) => ({
-          fontFamily: theme.typography.fontFamily, // Use Montserrat for consistency
-          backgroundColor: theme.palette.background.default,
+          fontFamily: theme.typography.fontFamily,
+          backgroundColor: COLORS.background.muted,
           color: theme.palette.text.primary,
+          borderRadius: 0,
         }),
         "*": {
           boxSizing: "border-box",
-          // Firefox scrollbar styling
           scrollbarWidth: "thin",
-          scrollbarColor: `${alpha(COLORS.text.primary, 0.3)} transparent`,
+          scrollbarColor: `${alpha(COLORS.text.primary, 0.35)} transparent`,
         },
         "*::-webkit-scrollbar": {
           width: "8px",
@@ -223,8 +374,8 @@ export const defaultThemeOptions: ThemeOptions = {
           background: "transparent",
         },
         "*::-webkit-scrollbar-thumb": {
-          backgroundColor: alpha(COLORS.text.primary, 0.3),
-          borderRadius: "4px",
+          backgroundColor: alpha(COLORS.text.primary, 0.35),
+          borderRadius: 0,
           "&:hover": {
             backgroundColor: alpha(COLORS.text.primary, 0.5),
           },
@@ -234,31 +385,95 @@ export const defaultThemeOptions: ThemeOptions = {
           minHeight: "100vh",
           WebkitFontSmoothing: "antialiased",
           MozOsxFontSmoothing: "grayscale",
+          backgroundColor: COLORS.background.default,
+          color: COLORS.text.primary,
         },
       },
     },
-    // Typography component styling - handles code elements via component="code"
     MuiTypography: {
       styleOverrides: {
         root: ({ theme }: { theme: Theme }) => ({
           "& code": {
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: COLORS.background.muted,
             color: theme.palette.text.primary,
-            padding: "2px 4px",
-            borderRadius: 1,
+            padding: "2px 8px",
+            borderRadius: 0,
             fontSize: theme.typography.body2.fontSize,
-            fontFamily: theme.typography.fontFamily, // Use Montserrat for consistency
+            fontFamily: theme.typography.fontFamily,
           },
         }),
       },
     },
-    // Chip component styling - small chips with custom height
     MuiChip: {
       styleOverrides: {
+        root: {
+          borderRadius: 0,
+          fontFamily: FONT_HEADER,
+          fontWeight: 900,
+          textTransform: "uppercase",
+          letterSpacing: "0.0625em",
+        },
         sizeSmall: ({ theme }: { theme: Theme }) => ({
-          height: 20, // Fixed height for small chips
+          height: 24,
           fontSize: theme.typography.caption.fontSize,
         }),
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme }: { theme: Theme }) => ({
+          borderRadius: 0,
+          transition: theme.transitions.create(["border-color"], { duration: 500 }),
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderWidth: 2,
+            borderColor: COLORS.border.input,
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: COLORS.text.secondary,
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderWidth: 2,
+            borderColor: theme.palette.primary.main,
+          },
+        }),
+        input: {
+          padding: "12px 16px",
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontFamily: FONT_HEADER,
+          fontWeight: 900,
+          textTransform: "uppercase",
+          letterSpacing: "0.0625em",
+          fontSize: "0.75rem",
+          "&.Mui-focused": {
+            color: COLORS.text.primary,
+          },
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          fontFamily: FONT_BODY,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 0,
+          boxShadow: "none",
+          border: `1px solid ${COLORS.border.subtle}`,
+        },
       },
     },
   },
