@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SP.nl — Styleguide</title>
+  <style>
+    /* ─── FONTS ────────────────────────────────────────────────────────────── */
+    /* sp.nl uses proprietary Helvetica Inserat + Helvetica Neue.
+       Fallbacks that are freely available and visually close: */
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,700&family=Barlow:wght@400;700&display=swap');
+
+    /* Design-token comment: in the real SP codebase, these map to:
+       --font-header: helveticaInserat  → use Barlow Condensed 900 as stand-in
+       --font-body:   helveticaNeue     → use Barlow 400 as stand-in         */
+
+    /* ─── DESIGN TOKENS ────────────────────────────────────────────────────── */
+    :root {
+      /* Colors */
+      --color-primary:          #e9161d;   /* SP red */
+      --color-primary-dark:     #b3050f;   /* hover / pressed red */
+      --color-primary-light:    #fc888f;   /* light red */
+
+      --color-secondary:        #7bc7c3;   /* teal */
+      --color-secondary-dark:   #33b3a6;
+      --color-secondary-light:  #b3f3ec;
+
+      --color-white:            #ffffff;
+      --color-background:       #ffffff;
+      --color-background-mute:  #f2f2f2;
+
+      --color-grey-10:          #eeeeee;
+      --color-grey-30:          #cbcbcb;
+      --color-grey-40:          #afafaf;
+      --color-grey-50:          #757575;
+      --color-grey-60:          #545454;
+      --color-grey-80:          #1f1f1f;
+      --color-grey-90:          #141414;
+      --color-black:            #000000;
+
+      --color-copy:             #141414;   /* default text */
+      --color-copy-mute:        #777777;
+      --color-copy-invert:      #ffffff;
+
+      --color-success:          #009944;
+      --color-error:            #cf000f;
+
+      /* Typography */
+      --font-header: 'Barlow Condensed', 'Helvetica Inserat', Tahoma, sans-serif;
+      --font-body:   'Barlow', 'Helvetica Neue', Helvetica, sans-serif;
+
+      /* Font sizes */
+      --text-xs:   12px;
+      --text-sm:   14px;
+      --text-base: 16px;
+      --text-lg:   20px;
+      --text-xl:   24px;
+      --text-2xl:  32px;
+      --text-3xl:  40px;
+      --text-4xl:  56px;
+      --text-5xl:  72px;
+      --text-6xl:  80px;
+
+      /* Line heights */
+      --leading-tight:  1.1;
+      --leading-snug:   1.2;
+      --leading-normal: 1.5;
+
+      /* Border radius */
+      --radius: 0px;   /* SP uses zero border-radius throughout */
+
+      /* Spacing scale (8-pt grid) */
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-6:  24px;
+      --space-8:  32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+      --space-20: 80px;
+      --space-24: 96px;
+
+      /* Layout */
+      --container-max: 1280px;
+      --container-padding: 24px;
+
+      /* Transitions */
+      --transition: all 500ms ease;
+    }
+
+    /* ─── RESET ─────────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: var(--leading-normal);
+      color: var(--color-copy);
+      background: var(--color-background);
+    }
+
+    /* ─── STYLEGUIDE CHROME ─────────────────────────────────────────────────── */
+    .sg-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-10) var(--space-6);
+    }
+    .sg-title {
+      font-family: var(--font-header);
+      font-size: 56px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      color: var(--color-primary);
+      border-bottom: 4px solid var(--color-primary);
+      padding-bottom: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+    .sg-section {
+      margin-bottom: var(--space-16);
+    }
+    .sg-section-label {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--color-copy-mute);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-grey-10);
+    }
+    .sg-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: flex-start;
+    }
+    .sg-col {
+      flex: 1;
+      min-width: 200px;
+    }
+    .sg-token-name {
+      font-size: var(--text-xs);
+      color: var(--color-grey-50);
+      font-family: monospace;
+      margin-top: var(--space-2);
+    }
+    .sg-swatch-label {
+      font-size: var(--text-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: var(--space-1);
+    }
+
+    /* ─── COLOR SWATCHES ────────────────────────────────────────────────────── */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: var(--space-4);
+    }
+    .swatch {
+      border-radius: 0;
+    }
+    .swatch-color {
+      height: 80px;
+      width: 100%;
+    }
+    .swatch-info {
+      padding-top: var(--space-2);
+    }
+    .swatch-name {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .swatch-hex {
+      font-size: 11px;
+      color: var(--color-grey-50);
+      font-family: monospace;
+    }
+
+    /* ─── TYPOGRAPHY SPECIMENS ──────────────────────────────────────────────── */
+    .type-specimen {
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-6);
+      border-bottom: 1px solid var(--color-grey-10);
+    }
+    .type-specimen:last-child { border-bottom: none; }
+    .type-meta {
+      display: flex;
+      gap: var(--space-4);
+      margin-top: var(--space-2);
+      flex-wrap: wrap;
+    }
+    .type-meta span {
+      font-size: var(--text-xs);
+      color: var(--color-grey-50);
+      font-family: monospace;
+    }
+    .type-meta span strong {
+      color: var(--color-copy);
+    }
+
+    /* ─── SP COMPONENT STYLES ───────────────────────────────────────────────── */
+
+    /* Headings */
+    .sp-h1 {
+      font-family: var(--font-header);
+      font-size: var(--text-6xl);
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+      color: var(--color-copy);
+    }
+    .sp-h2 {
+      font-family: var(--font-header);
+      font-size: var(--text-5xl);
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+      color: var(--color-copy);
+    }
+    .sp-h3 {
+      font-family: var(--font-header);
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      line-height: 1.15;
+      text-transform: uppercase;
+      color: var(--color-copy);
+    }
+    .sp-h4 {
+      font-family: var(--font-header);
+      font-size: var(--text-3xl);
+      font-weight: 900;
+      line-height: 1.2;
+      text-transform: uppercase;
+      color: var(--color-copy);
+    }
+    .sp-h5 {
+      font-family: var(--font-header);
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      line-height: 1.25;
+      text-transform: uppercase;
+      color: var(--color-copy);
+    }
+    .sp-h6 {
+      font-family: var(--font-header);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      line-height: 1.3;
+      text-transform: uppercase;
+      color: var(--color-copy);
+    }
+    .sp-subtitle {
+      font-family: var(--font-body);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--color-copy);
+      line-height: var(--leading-normal);
+    }
+    .sp-body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      font-weight: 400;
+      line-height: var(--leading-normal);
+      color: var(--color-copy);
+    }
+    .sp-body-sm {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 400;
+      line-height: var(--leading-normal);
+      color: var(--color-copy-mute);
+    }
+    .sp-label {
+      font-family: var(--font-header);
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-copy);
+    }
+
+    /* Buttons */
+    .sp-btn {
+      display: inline-block;
+      font-family: var(--font-header);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: var(--space-3) var(--space-6);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      line-height: 1.2;
+    }
+    .sp-btn-primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+    .sp-btn-primary:hover {
+      background: var(--color-primary-dark);
+    }
+    .sp-btn-secondary {
+      background: var(--color-secondary);
+      color: var(--color-copy);
+    }
+    .sp-btn-secondary:hover {
+      background: var(--color-secondary-dark);
+      color: var(--color-white);
+    }
+    .sp-btn-dark {
+      background: var(--color-grey-80);
+      color: var(--color-white);
+    }
+    .sp-btn-dark:hover {
+      background: var(--color-black);
+    }
+    .sp-btn-outline {
+      background: transparent;
+      color: var(--color-copy);
+      border: 2px solid var(--color-copy);
+    }
+    .sp-btn-outline:hover {
+      background: var(--color-copy);
+      color: var(--color-white);
+    }
+    .sp-btn-outline-invert {
+      background: transparent;
+      color: var(--color-white);
+      border: 2px solid var(--color-white);
+    }
+    .sp-btn-outline-invert:hover {
+      background: var(--color-white);
+      color: var(--color-copy);
+    }
+
+    /* Text links */
+    .sp-link {
+      font-family: var(--font-header);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--color-copy);
+      text-decoration: none;
+      border-bottom: 2px solid var(--color-copy);
+      padding-bottom: 2px;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .sp-link:hover { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+    .sp-link-invert {
+      color: var(--color-white);
+      border-bottom-color: var(--color-white);
+    }
+    .sp-link-invert:hover { color: var(--color-secondary-light); border-bottom-color: var(--color-secondary-light); }
+
+    /* Category tag */
+    .sp-tag {
+      display: inline-block;
+      font-family: var(--font-header);
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-copy);
+      background: var(--color-white);
+      padding: 3px var(--space-2);
+      border-radius: var(--radius);
+    }
+    .sp-tag-primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+    }
+    .sp-tag-secondary {
+      background: var(--color-secondary);
+      color: var(--color-copy);
+    }
+    .sp-tag-dark {
+      background: var(--color-grey-80);
+      color: var(--color-white);
+    }
+
+    /* Input */
+    .sp-input {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-copy);
+      background: var(--color-white);
+      border: 2px solid var(--color-grey-30);
+      border-radius: var(--radius);
+      padding: var(--space-3) var(--space-4);
+      width: 100%;
+      outline: none;
+      transition: var(--transition);
+    }
+    .sp-input:focus { border-color: var(--color-primary); }
+    .sp-input::placeholder { color: var(--color-grey-40); }
+    .sp-input-invert {
+      background: transparent;
+      border-color: var(--color-white);
+      color: var(--color-white);
+    }
+    .sp-input-invert::placeholder { color: rgba(255,255,255,0.5); }
+
+    /* Highlighted text block (signature SP device) */
+    .sp-highlight {
+      display: inline;
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: 2px var(--space-2);
+      font-family: var(--font-header);
+      font-size: inherit;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .sp-highlight-white {
+      background: var(--color-white);
+      color: var(--color-primary);
+    }
+
+    /* Check-item (ticks/standpoints) */
+    .sp-checkitem {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .sp-check-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background: var(--color-primary);
+      color: var(--color-white);
+      font-size: 22px;
+      font-weight: 900;
+    }
+    .sp-check-text {
+      font-family: var(--font-header);
+      font-size: var(--text-3xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    /* News card */
+    .sp-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--color-white);
+      border-radius: 0;
+    }
+    .sp-card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      background: var(--color-grey-10);
+      position: relative;
+    }
+    .sp-card-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--color-grey-10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-grey-40);
+      font-size: var(--text-sm);
+      font-family: var(--font-body);
+      position: relative;
+    }
+    .sp-card-tag {
+      position: absolute;
+      top: var(--space-2);
+      left: 0;
+    }
+    .sp-card-body {
+      padding: var(--space-4);
+      background: var(--color-secondary);
+      flex: 1;
+    }
+    .sp-card-body-white { background: var(--color-white); }
+    .sp-card-meta {
+      font-family: var(--font-body);
+      font-size: var(--text-xs);
+      color: var(--color-copy-mute);
+      margin-bottom: var(--space-2);
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+    }
+    .sp-card-title {
+      font-family: var(--font-header);
+      font-size: var(--text-2xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.15;
+      color: var(--color-copy);
+    }
+
+    /* Featured card (hero-card) */
+    .sp-card-featured {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .sp-card-featured-body {
+      background: var(--color-secondary);
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-4);
+    }
+    .sp-card-featured-title {
+      font-family: var(--font-header);
+      font-size: var(--text-4xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.1;
+      color: var(--color-copy);
+    }
+
+    /* Hero section */
+    .sp-hero {
+      background: var(--color-secondary);
+      padding: var(--space-20) var(--space-6);
+      text-align: center;
+    }
+    .sp-hero-title {
+      font-family: var(--font-header);
+      font-size: var(--text-6xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--color-white);
+      line-height: 1.1;
+    }
+    .sp-hero-title .line-accent {
+      display: inline-block;
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: 0 var(--space-4);
+    }
+    .sp-hero-title .line-white {
+      display: inline-block;
+      background: var(--color-white);
+      color: var(--color-primary);
+      padding: 0 var(--space-4);
+    }
+
+    /* Dark CTA banner */
+    .sp-banner-dark {
+      background: var(--color-grey-80);
+      color: var(--color-white);
+      padding: var(--space-16) var(--space-6);
+      text-align: center;
+    }
+    .sp-banner-primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: var(--space-12) var(--space-6);
+    }
+
+    /* Navigation */
+    .sp-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      background: var(--color-white);
+      border-bottom: none;
+    }
+    .sp-nav-links {
+      display: flex;
+      gap: var(--space-8);
+      list-style: none;
+    }
+    .sp-nav-link {
+      font-family: var(--font-header);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--color-copy);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .sp-nav-link:hover { color: var(--color-primary); }
+    .sp-nav-actions {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+    }
+
+    /* Logo placeholder */
+    .sp-logo {
+      font-family: var(--font-header);
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    /* Divider */
+    .sp-divider {
+      border: none;
+      border-top: 2px solid var(--color-grey-10);
+      margin: var(--space-8) 0;
+    }
+    .sp-divider-bold {
+      border-top: 4px solid var(--color-primary);
+    }
+
+    /* ─── DEMO GRID ─────────────────────────────────────────────────────────── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+    .demo-box {
+      padding: var(--space-6);
+    }
+  </style>
+</head>
+<body>
+<div class="sg-page">
+
+  <div class="sg-title">SP Styleguide</div>
+  <p class="sp-body" style="margin-bottom: var(--space-12); color: var(--color-copy-mute);">
+    Visual design system derived from sp.nl — for building apps in the SP visual identity.
+    Based on live CSS analysis of the production website (March 2026).
+  </p>
+
+  <!-- ═══════════════════ COLORS ═══════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">01 — Colors</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      The SP palette is defined by a stark contrast between <strong>SP Red</strong> (the party's primary identity color),
+      <strong>Teal</strong> (secondary accent), and a tight greyscale. No gradients. No opacity tricks.
+      High contrast is intentional — this is political communication.
+    </p>
+
+    <p class="sp-label" style="margin-bottom: var(--space-3);">Brand</p>
+    <div class="swatch-grid" style="margin-bottom: var(--space-8);">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#e9161d;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Primary / SP Red</div>
+          <div class="swatch-hex">--color-primary<br>#e9161d</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#b3050f;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Primary Dark</div>
+          <div class="swatch-hex">--color-primary-600<br>#b3050f</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#fc888f;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Primary Light</div>
+          <div class="swatch-hex">--color-primary-200<br>#fc888f</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7bc7c3;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Secondary / Teal</div>
+          <div class="swatch-hex">--color-secondary<br>#7bc7c3</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#33b3a6;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Secondary Dark</div>
+          <div class="swatch-hex">--color-secondary-600<br>#33b3a6</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#b3f3ec;"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Secondary Light</div>
+          <div class="swatch-hex">--color-secondary-200<br>#b3f3ec</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="sp-label" style="margin-bottom: var(--space-3);">Neutrals</p>
+    <div class="swatch-grid" style="margin-bottom: var(--space-8);">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#ffffff; border:1px solid #eee;"></div>
+        <div class="swatch-info"><div class="swatch-name">White</div><div class="swatch-hex">#ffffff</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f2f2f2;"></div>
+        <div class="swatch-info"><div class="swatch-name">Background Mute</div><div class="swatch-hex">#f2f2f2</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#eeeeee;"></div>
+        <div class="swatch-info"><div class="swatch-name">Grey 10</div><div class="swatch-hex">#eeeeee</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#cbcbcb;"></div>
+        <div class="swatch-info"><div class="swatch-name">Grey 30</div><div class="swatch-hex">#cbcbcb</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#757575;"></div>
+        <div class="swatch-info"><div class="swatch-name">Grey 50</div><div class="swatch-hex">#757575</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#545454;"></div>
+        <div class="swatch-info"><div class="swatch-name">Grey 60</div><div class="swatch-hex">#545454</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1f1f1f;"></div>
+        <div class="swatch-info"><div class="swatch-name" style="color:#fff; position:relative; z-index:1; mix-blend-mode:difference;">Grey 80</div><div class="swatch-hex">#1f1f1f</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#141414;"></div>
+        <div class="swatch-info"><div class="swatch-name">Copy / Grey 90</div><div class="swatch-hex">#141414</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#000000;"></div>
+        <div class="swatch-info"><div class="swatch-name">Black</div><div class="swatch-hex">#000000</div></div>
+      </div>
+    </div>
+
+    <p class="sp-label" style="margin-bottom: var(--space-3);">Semantic</p>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#009944;"></div>
+        <div class="swatch-info"><div class="swatch-name">Success</div><div class="swatch-hex">#009944</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#cf000f;"></div>
+        <div class="swatch-info"><div class="swatch-name">Error</div><div class="swatch-hex">#cf000f</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#777777;"></div>
+        <div class="swatch-info"><div class="swatch-name">Copy Muted</div><div class="swatch-hex">#777777</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ TYPOGRAPHY ═══════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">02 — Typography</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      Two fonts. Headers use <strong>Helvetica Inserat</strong> (condensed, ultra-bold) set in ALL CAPS —
+      it's the visual engine of the SP brand. Body copy uses <strong>Helvetica Neue</strong>, regular weight.
+      Border-radius is <strong>0px</strong> everywhere. No softness, no rounding.
+    </p>
+
+    <div class="type-specimen">
+      <div class="sp-h1">Maak Nederland</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> H1</span>
+        <span><strong>Font:</strong> Helvetica Inserat / Barlow Condensed 900</span>
+        <span><strong>Size:</strong> 80px</span>
+        <span><strong>LH:</strong> 1.1</span>
+        <span><strong>Case:</strong> uppercase</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-h2">Huren omlaag</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> H2</span>
+        <span><strong>Size:</strong> 72px / lh 1.1</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-h3">Geen kind in armoede</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> H3</span>
+        <span><strong>Size:</strong> 56px / lh 1.15</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-h4">Red de Zorg</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> H4</span>
+        <span><strong>Size:</strong> 40px / lh 1.2</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-h5">Meer nieuws</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> H5 / Section header</span>
+        <span><strong>Size:</strong> 32px / lh 1.25</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-h6">Standpunten</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> H6 / Nav</span>
+        <span><strong>Size:</strong> 24px / lh 1.3</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-subtitle">Voor hogere lonen en meer gemeentelijke hulp</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> Subtitle / Lead</span>
+        <span><strong>Font:</strong> Helvetica Neue Bold</span>
+        <span><strong>Size:</strong> 20px / lh 1.5</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-body">Meer dan veertig procent van de Nederlanders woont in een huurhuis. Deze woningen zouden de basis moeten vormen voor de economische zekerheid van de werkende klasse.</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> Body</span>
+        <span><strong>Font:</strong> Helvetica Neue 400</span>
+        <span><strong>Size:</strong> 16px / lh 1.5</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-body-sm">Geplaatst: 30 maart '26 | Nieuws</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> Meta / Caption</span>
+        <span><strong>Size:</strong> 14px / color: --color-copy-mute</span>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sp-label">Politiek Algemeen</div>
+      <div class="type-meta">
+        <span><strong>Role:</strong> Category label / Tag</span>
+        <span><strong>Font:</strong> Helvetica Inserat 900</span>
+        <span><strong>Size:</strong> 12px / letter-spacing: 1px</span>
+      </div>
+    </div>
+
+    <div style="margin-top: var(--space-8); padding: var(--space-6); background: var(--color-background-mute);">
+      <p class="sp-label" style="margin-bottom: var(--space-4);">Signature text device — highlighted words</p>
+      <div class="sp-h3">
+        Maak<br>
+        <span class="sp-highlight">Nederland</span><br>
+        Betaalbaar
+      </div>
+      <p class="sp-body-sm" style="margin-top: var(--space-3);">
+        Key words are placed on a red background block. Other lines appear in white on dark/teal, or dark on white.
+        This is the SP's most recognisable visual device.
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ BUTTONS ══════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">03 — Buttons & Links</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      Buttons are flat (border-radius: 0), uppercase, set in the header font.
+      The primary button uses SP Red. Hover states darken the background.
+      Text links use an underline that turns red on hover.
+    </p>
+
+    <div class="sg-row" style="margin-bottom: var(--space-8);">
+      <div>
+        <button class="sp-btn sp-btn-primary">Doneer</button>
+        <div class="sg-token-name">sp-btn-primary<br>bg: --color-primary</div>
+      </div>
+      <div>
+        <button class="sp-btn sp-btn-secondary">Word Lid +</button>
+        <div class="sg-token-name">sp-btn-secondary<br>bg: --color-secondary</div>
+      </div>
+      <div>
+        <button class="sp-btn sp-btn-dark">Meer nieuws</button>
+        <div class="sg-token-name">sp-btn-dark<br>bg: --color-grey-80</div>
+      </div>
+      <div>
+        <button class="sp-btn sp-btn-outline">Lees meer</button>
+        <div class="sg-token-name">sp-btn-outline<br>border: 2px solid copy</div>
+      </div>
+    </div>
+
+    <div style="padding: var(--space-8); background: var(--color-grey-80); margin-bottom: var(--space-8);">
+      <div class="sg-row">
+        <div>
+          <button class="sp-btn sp-btn-primary">Doneer</button>
+          <div class="sg-token-name" style="color:var(--color-grey-40);">primary on dark</div>
+        </div>
+        <div>
+          <button class="sp-btn sp-btn-outline-invert">Meer info</button>
+          <div class="sg-token-name" style="color:var(--color-grey-40);">outline-invert on dark</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="sp-label" style="margin-bottom: var(--space-4);">Text links (uppercase, underline)</p>
+    <div class="sg-row">
+      <div>
+        <a href="#" class="sp-link">← Bekijk ons plan</a>
+        <div class="sg-token-name">sp-link — on white</div>
+      </div>
+      <div>
+        <a href="#" class="sp-link">Meer nieuws ↓</a>
+        <div class="sg-token-name">with icon/arrow</div>
+      </div>
+    </div>
+    <div style="padding: var(--space-6); background: var(--color-grey-80); margin-top: var(--space-4);">
+      <a href="#" class="sp-link sp-link-invert">Teken de petitie ✍</a>
+      <div class="sg-token-name" style="color:var(--color-grey-40);">sp-link-invert — on dark</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ TAGS ══════════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">04 — Tags & Labels</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      Tags are small, all-caps, and appear on card images to indicate category.
+      No border-radius.
+    </p>
+
+    <div class="sg-row">
+      <div>
+        <span class="sp-tag">Politiek Algemeen</span>
+        <div class="sg-token-name">Default — white on white bg (used on images)</div>
+      </div>
+      <div>
+        <span class="sp-tag sp-tag-primary">Inkomen</span>
+        <div class="sg-token-name">Primary — white text on red</div>
+      </div>
+      <div>
+        <span class="sp-tag sp-tag-secondary">Overig</span>
+        <div class="sg-token-name">Secondary — on teal</div>
+      </div>
+      <div>
+        <span class="sp-tag sp-tag-dark">Nieuws</span>
+        <div class="sg-token-name">Dark</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ FORM ELEMENTS ════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">05 — Form Elements</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      Inputs are square, with a 2px border. On focus, the border turns primary red.
+      The inverted variant (used in red/dark sections) has a white border on transparent.
+    </p>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-8);">
+      <div>
+        <p class="sp-label" style="margin-bottom: var(--space-3);">Default</p>
+        <input class="sp-input" type="email" placeholder="E-mailadres" />
+        <div style="margin-top: var(--space-4);">
+          <button class="sp-btn sp-btn-primary" style="width:100%;">Inschrijven</button>
+        </div>
+      </div>
+      <div style="padding: var(--space-6); background: var(--color-primary);">
+        <p class="sp-label" style="margin-bottom: var(--space-3); color: var(--color-white);">On Primary Red</p>
+        <input class="sp-input sp-input-invert" type="email" placeholder="E-mailadres" style="border-color:white; color:white;" />
+        <div style="margin-top: var(--space-4);">
+          <button class="sp-btn sp-btn-outline-invert" style="width:100%;">Inschrijven</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ CARDS ═════════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">06 — Cards</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      News cards have a category tag floating over the image, and a teal body.
+      Titles are always all-caps Helvetica Inserat. No rounded corners anywhere.
+    </p>
+
+    <p class="sp-label" style="margin-bottom: var(--space-4);">News card grid (3-column)</p>
+    <div class="card-grid" style="margin-bottom: var(--space-8);">
+      <div class="sp-card">
+        <div class="sp-card-img-placeholder" style="position: relative;">
+          <span class="sp-tag sp-tag-primary" style="position:absolute; top:8px; left:0;">Inkomen</span>
+          <span style="color: var(--color-grey-40);">Foto</span>
+        </div>
+        <div class="sp-card-body">
+          <div class="sp-card-meta">Geplaatst: 30-03-'26 &nbsp;|&nbsp; Nieuws</div>
+          <div class="sp-card-title">50.000 nieuwe banen voor mensen die nu willen werken</div>
+        </div>
+      </div>
+      <div class="sp-card">
+        <div class="sp-card-img-placeholder" style="position:relative;">
+          <span class="sp-tag" style="position:absolute; top:8px; left:0; background:white;">Politiek Algemeen</span>
+          <span style="color: var(--color-grey-40);">Foto</span>
+        </div>
+        <div class="sp-card-body">
+          <div class="sp-card-meta">Geplaatst: 13-03-'26 &nbsp;|&nbsp; Nieuws</div>
+          <div class="sp-card-title">Maak Nederland betaalbaar</div>
+        </div>
+      </div>
+      <div class="sp-card">
+        <div class="sp-card-img-placeholder" style="position:relative;">
+          <span class="sp-tag sp-tag-dark" style="position:absolute; top:8px; left:0;">Overig</span>
+          <span style="color: var(--color-grey-40);">Foto</span>
+        </div>
+        <div class="sp-card-body">
+          <div class="sp-card-meta">Geplaatst: 13-03-'26 &nbsp;|&nbsp; Nieuws</div>
+          <div class="sp-card-title">SP en ChristenUnie presenteren wetsvoorstel tegen misstanden</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="sp-label" style="margin-bottom: var(--space-4);">Featured card (50/50 split)</p>
+    <div class="sp-card-featured">
+      <div class="sp-card-img-placeholder" style="min-height:240px;">
+        <span style="color: var(--color-grey-40);">Foto</span>
+      </div>
+      <div class="sp-card-featured-body">
+        <div class="sp-card-meta">30 maart '26 &nbsp;|&nbsp; Nieuws</div>
+        <div class="sp-card-featured-title">Kijk terug: Toespraak van Jimmy Dijk op de Partijraad</div>
+        <a href="#" class="sp-link">Lees meer →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ CHECK ITEMS ═══════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">07 — Standpoints (Check Items)</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      Used for policy standpoints. A red square with a white checkmark precedes the title.
+      Below the heading, a subtitle (bold body) and body copy follow.
+    </p>
+
+    <div style="max-width: 600px;">
+      <div class="sp-checkitem">
+        <div class="sp-check-icon">✓</div>
+        <div class="sp-check-text">Huren omlaag</div>
+      </div>
+      <p class="sp-subtitle" style="margin-bottom: var(--space-3);">Meer goede, gezonde en betaalbare huurwoningen</p>
+      <p class="sp-body">Meer dan veertig procent van de Nederlanders woont in een huurhuis. Deze woningen zouden de basis moeten vormen voor de economische zekerheid van de werkende klasse.</p>
+      <div style="margin-top: var(--space-6);">
+        <a href="#" class="sp-link">← Bekijk ons plan</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTIONS ══════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">08 — Section Backgrounds</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">
+      SP pages alternate between four main section backgrounds to create rhythm and emphasis.
+      All padding is generous (80–96px vertical). Content is max 1280px centered.
+    </p>
+
+    <!-- Hero -->
+    <div class="sp-hero" style="margin-bottom: var(--space-4);">
+      <div class="sp-hero-title">
+        Maak<br>
+        <span class="line-accent">Nederland</span><br>
+        <span class="line-white">Betaalbaar</span>
+      </div>
+    </div>
+    <p class="sg-token-name" style="margin-bottom: var(--space-6);">Hero — bg: --color-secondary (#7bc7c3), title: white + red + white highlight blocks</p>
+
+    <!-- Dark CTA -->
+    <div class="sp-banner-dark" style="margin-bottom: var(--space-4);">
+      <div class="sp-h2" style="color: var(--color-white);">Sluit je nu aan</div>
+      <div style="margin-top: var(--space-4);">
+        <a href="#" class="sp-link sp-link-invert">👉 En word lid</a>
+      </div>
+    </div>
+    <p class="sg-token-name" style="margin-bottom: var(--space-6);">CTA Banner — bg: --color-grey-80 (#1f1f1f)</p>
+
+    <!-- Primary red -->
+    <div class="sp-banner-primary" style="margin-bottom: var(--space-4);">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: center; max-width: 900px; margin: 0 auto;">
+        <div>
+          <div class="sp-h3" style="color: var(--color-white);">Blijf op de hoogte</div>
+          <p class="sp-body" style="color: var(--color-white); margin-top: var(--space-3);">Schrijf je in voor de nieuwsbrief van Jimmy en de SP.</p>
+        </div>
+        <div>
+          <p class="sp-label" style="color: var(--color-white); margin-bottom: var(--space-2);">E-mail</p>
+          <input class="sp-input sp-input-invert" type="email" placeholder="jouw@email.nl" />
+          <div style="margin-top: var(--space-3);">
+            <button class="sp-btn sp-btn-outline-invert">Inschrijven</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="sg-token-name" style="margin-bottom: var(--space-6);">Newsletter — bg: --color-primary (#e9161d)</p>
+
+    <!-- White with muted bg -->
+    <div style="background: var(--color-background-mute); padding: var(--space-8); margin-bottom: var(--space-4);">
+      <div class="sp-h5">Meer over de SP</div>
+      <p class="sp-body" style="margin-top: var(--space-4);">De Socialistische Partij is een Nederlandse politieke partij opgericht in 1971.</p>
+    </div>
+    <p class="sg-token-name">Muted section — bg: --color-background-mute (#f2f2f2)</p>
+  </div>
+
+  <!-- ═══════════════════ NAVIGATION ════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">09 — Navigation</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-4);">
+      White header. Logo left, nav links centre-right, CTAs far right.
+      All nav items uppercase Helvetica Inserat. "Word Lid" uses a teal background button; "Doneer" uses red.
+    </p>
+
+    <div class="sp-nav" style="border: 1px solid var(--color-grey-10);">
+      <div class="sp-logo">SP.</div>
+      <ul class="sp-nav-links">
+        <li><a href="#" class="sp-nav-link">Standpunten</a></li>
+        <li><a href="#" class="sp-nav-link">Nieuws</a></li>
+        <li><a href="#" class="sp-nav-link">Partij</a></li>
+      </ul>
+      <div class="sp-nav-actions">
+        <button class="sp-btn sp-btn-secondary" style="font-size:16px; padding: 6px 16px;">Word Lid +</button>
+        <button class="sp-btn sp-btn-primary" style="font-size:16px; padding: 6px 16px;">Doneer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SPACING ═══════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">10 — Spacing Scale</div>
+
+    <p class="sp-body-sm" style="margin-bottom: var(--space-6);">8-pt grid. Use multiples of 8 for all spacing.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:4px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-1 &nbsp; 4px</span>
+      </div>
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:8px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-2 &nbsp; 8px</span>
+      </div>
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:16px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-4 &nbsp; 16px</span>
+      </div>
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:24px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-6 &nbsp; 24px &nbsp;(container padding)</span>
+      </div>
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:32px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-8 &nbsp; 32px</span>
+      </div>
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:48px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-12 &nbsp;48px</span>
+      </div>
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:64px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-16 &nbsp;64px</span>
+      </div>
+      <div style="display:flex; align-items:center; gap: 16px;">
+        <div style="width:80px; height:16px; background:var(--color-primary);"></div>
+        <span class="sp-body-sm">--space-20 &nbsp;80px &nbsp;(section vertical padding)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ PRINCIPLES ════════════════════════════════════════ -->
+  <div class="sg-section">
+    <div class="sg-section-label">11 — Design Principles</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8);">
+      <div>
+        <div class="sp-h6" style="margin-bottom: var(--space-3);">Bold & Directional</div>
+        <p class="sp-body">Every visual choice communicates urgency and confidence.
+        No decorative elements — only content and colour do the work. Typography is BIG.</p>
+      </div>
+      <div>
+        <div class="sp-h6" style="margin-bottom: var(--space-3);">Zero Radius</div>
+        <p class="sp-body">Absolutely no border-radius on any element.
+        Corners are sharp. This is intentional — it reflects the party's direct, uncompromising identity.</p>
+      </div>
+      <div>
+        <div class="sp-h6" style="margin-bottom: var(--space-3);">All Caps Headings</div>
+        <p class="sp-body">All headings and navigation are uppercase.
+        This creates instant visual hierarchy and makes the brand feel like a political poster.</p>
+      </div>
+      <div>
+        <div class="sp-h6" style="margin-bottom: var(--space-3);">Colour as Signal</div>
+        <p class="sp-body">Red = action, identity, emphasis. Teal = editorial content, hero.
+        Dark/black = high-impact CTA. White = neutral reading. Never mix signals.</p>
+      </div>
+      <div>
+        <div class="sp-h6" style="margin-bottom: var(--space-3);">Two Fonts Only</div>
+        <p class="sp-body">Helvetica Inserat for all display/headings, Helvetica Neue for body.
+        No decorative fonts. No italics in UI (editorial use only).</p>
+      </div>
+      <div>
+        <div class="sp-h6" style="margin-bottom: var(--space-3);">Flat & Fast</div>
+        <p class="sp-body">No box-shadows on cards. No gradients. Hover transitions are 500ms —
+        noticeable but not slow. Background colour is the primary layering tool.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
