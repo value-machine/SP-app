@@ -1,11 +1,19 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { devApiPlugin } from "./vite-plugin-dev-api";
+
+const rawBase = process.env.VITE_BASE_PATH;
+const base =
+  rawBase === undefined || rawBase === ""
+    ? "/"
+    : rawBase.endsWith("/")
+      ? rawBase
+      : `${rawBase}/`;
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), devApiPlugin()],
+  base,
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

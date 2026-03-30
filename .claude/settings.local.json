@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.sp.nl)",
+      "Bash(for f:*)",
+      "Bash(do)",
+      "Bash(echo \"=== FILE: $f ===\")",
+      "Read(//c/Users/Lenovo/Documents/AppDev/SP-app/**)",
+      "Bash(done)",
+      "Bash(echo \"=== $f ===\")"
+    ]
+  }
+}

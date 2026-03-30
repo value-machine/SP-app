@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.1] - 2026-03-30
+
+### Added
+
+- **GitHub Pages**: CI-workflow deployt bij elke push naar `main` naar GitHub Pages (Vite `base` voor subpath, React Router `basename`, `404.html` voor SPA-deep links). Zet in de repo dezelfde `VITE_*` secrets als in `.env.example` voor een werkende productie-build.
+
+## [0.15.0] - 2026-03-30
+
+### Added
+
+- **Werkgroepen-overzicht**: Nieuwe pagina `/werkgroepen` met MUI-accordions, iconen en ledenoverzicht voor bestuur, kerngroep, werkgroepen en tijdelijke commissies
+
+### Changed
+
+- **Branding**: Applicatietitel bijgewerkt naar `SP Utrecht` (topbar en browser-title)
+- **Developer workflow docs/rules**: Verwijzingen opgeschoond na setup-verwijdering in workflow/docs/skills en CI-validatiestappen
+
+### Removed
+
+- **Setup wizard boilerplate**: Volledige verwijdering van setup route, setup feature (`src/features/setup/**`), setup utils/tests, dev setup plugin (`vite-plugin-dev-api.ts`) en app-config validator
+- **Setup-specifieke documentatie**: Verwijderde setup/app-config documenten en dode links opgeschoond in resterende docs
+
+## [0.14.0] - 2026-03-30
+
+### Added
+
+- **Werkgroepen-overzicht**: Pagina `/werkgroepen` met MUI (accordions, leden-tabel, iconen) voor bestuur, kerngroep, werkgroepen en tijdelijke commissies; statische content in `src/features/werkgroepen/services/werkgroepenStaticData.ts`; link in topbar
+
+### Changed
+
+- **Theme**: Default MUI theme aligned with SP.nl visual identity from `sp-styleguide.html` (Barlow / Barlow Condensed, palette, flat zero-radius components); `index.html` font imports and document title updated; setup Theme section comment cleanup
+
 ## [0.13.0] - 2026-03-26
 
 ### Added

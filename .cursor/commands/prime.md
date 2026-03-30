@@ -3,7 +3,7 @@
 Load project context at the start of a new session. Build an understanding of this boilerplate’s structure, governance, and active state before tackling tasks.
 
 **When to use:** New chat, ambiguous task, or before larger refactors.  
-**Related:** For feature requests and completeness gates, use `.cursor/commands/check.md`. For onboarding a human, use `.cursor/commands/start.md`.
+**Related:** For feature requests and completeness gates, use `.cursor/commands/check.md`.
 
 ## Objective
 
@@ -18,7 +18,7 @@ Align with project rules and architecture so work does not violate enforced boun
 - **Tracked files:** Run `git ls-files` (large repos: in PowerShell use `git ls-files | Select-Object -First 150` instead of `head`).
 - **Architecture overview:** Read `ARCHITECTURE.md` (folder layout, TanStack Query, layers, path aliases).
 - **Doc index:** Read `documentation/DOC_INDEX.md` (SSOT map, quick links).
-- **Features (discover, do not assume):** List `src/features/` — this boilerplate ships with **`auth`** and **`setup`** only; forks may add more. Do not use a fixed feature list from another repo.
+- **Features (discover, do not assume):** List `src/features/` and report only what is present in this repository. Do not use a fixed feature list from another repo.
 - **Entry points:** Read `index.html`, `src/main.tsx`, `src/App.tsx` (provider order: `QueryProvider` → `AuthProvider` → `BrowserRouter`).
 
 ### 2. Governance and rules

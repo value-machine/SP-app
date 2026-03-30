@@ -645,6 +645,17 @@ module.exports = {
         { name: "*.log" },
       ],
     },
+    // Claude command files (legacy assistant command set)
+    {
+      name: ".claude",
+      children: [
+        {
+          name: "commands",
+          children: [{ name: "*.md" }],
+        },
+        { name: "settings.local.json" },
+      ],
+    },
     // GitHub workflows (if exists)
     {
       name: ".github",
@@ -675,7 +686,6 @@ module.exports = {
     },
     // Root config files - specific files only (no wildcards to prevent temporary/corrupted files)
     // JSON config files
-    { name: "app.config.json" },
     { name: ".dependency-cruiser-baseline.json" },
     { name: ".eslintrc.json" },
     { name: "cors.json" },
@@ -703,7 +713,6 @@ module.exports = {
     // TypeScript config files (specific only, no wildcard)
     { name: "vite.config.ts" },
     { name: "vitest.config.ts" },
-    { name: "vite-plugin-dev-api.ts" },
     // YAML files (specific only, no wildcard - pure whitelist)
     { name: "pnpm-lock.yaml" },
     { name: "pnpm-workspace.yaml" },
@@ -715,6 +724,8 @@ module.exports = {
     { name: "architecture.md" },
     { name: "ARCHITECTURE.md" }, // Allow uppercase variant
     { name: "CHANGELOG.md" },
+    { name: "CLAUDE.md" },
+    { name: "sp-styleguide.html" },
     // XML files removed - should be in documentation/ if needed for reference
     // SQL files removed - should be in migrations/ or documentation/, not root
     // Other config files

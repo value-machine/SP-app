@@ -16,7 +16,7 @@ Delete all starter setup files and update references. The AI must trace imports 
 - `src/features/setup/` (all files: components, hooks, services, types, views)
 
 **Scripts:**
-- `scripts/validate-app-config.js`
+- Remove app-config validation script from `scripts/`
 
 **Config & plugin:**
 - `app.config.json`
@@ -62,17 +62,11 @@ Remove `app.config.json` and `vite-plugin-dev-api.ts` from the root-level whitel
 
 - Remove `validate:app-config` script from `package.json`
 - Remove the "App config validation" step from `.github/workflows/ci.yml`
-- Delete `scripts/validate-app-config.js`
+- Delete the app-config validation script from `scripts/`
 
 ### 7. Delete Boilerplate-Only Documentation
 
-Delete these docs (they reference setup wizard, app.config.json, or finish-setup flow):
-
-- `documentation/DOC_APP_CONFIG_FILE.md`
-- `documentation/DOC_SETUP_STATES_AND_TRANSITIONS.md`
-- `documentation/DOC_TESTING_SUPABASE_SETUP.md`
-- `documentation/DOC_TESTING_APP_CONFIG.md`
-- `documentation/DOC_APP_CODE_MODIFICATION.md`
+Delete setup/app-config docs in `documentation/` that only exist for the setup wizard flow.
 
 ### 8. Update Remaining Docs
 
@@ -87,7 +81,7 @@ Delete these docs (they reference setup wizard, app.config.json, or finish-setup
 
 After deleting docs, run a repository-wide search and remove or update references to deleted files:
 
-- Search for: `DOC_APP_CONFIG_FILE.md`, `DOC_SETUP_STATES_AND_TRANSITIONS.md`, `DOC_TESTING_SUPABASE_SETUP.md`, `DOC_TESTING_APP_CONFIG.md`, `DOC_APP_CODE_MODIFICATION.md`
+- Search for references to deleted setup/app-config docs and remove dead links.
 - Update links in remaining docs (README, ARCHITECTURE, documentation/*) so there are no dead links
 - If any hits appear under protected files (e.g. `.cursor/**`), do not auto-edit; ask the user first per workflow protected-file rules
 
@@ -99,7 +93,7 @@ The setup feature directory (`src/features/setup/`) is deleted in step 1, which 
 
 ### 11. Delete Start Command
 
-Delete `.cursor/commands/start.md` after setup-removal is complete. It is only needed while onboarding from the boilerplate.
+Delete onboarding start command files after setup-removal is complete.
 
 ## Notes
 

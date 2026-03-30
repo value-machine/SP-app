@@ -10,7 +10,12 @@ import { QueryErrorBoundary } from "@/components/common/QueryErrorBoundary";
 import { AuthCallbackPage } from "@pages/AuthCallbackPage";
 
 const HomePage = lazy(() => import("@pages/HomePage").then((m) => ({ default: m.HomePage })));
-const SetupPage = lazy(() => import("@pages/SetupPage").then((m) => ({ default: m.SetupPage })));
+const WerkgroepenPage = lazy(() =>
+  import("@pages/Werkgroepen/WerkgroepenPage").then((m) => ({ default: m.WerkgroepenPage }))
+);
+
+/** Matches Vite `base` (no trailing slash); root build uses empty basename */
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function AppContent() {
   const theme = useTheme();
@@ -28,9 +33,9 @@ function AppContent() {
             <Routes>
               <Route element={<MainLayout />}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/werkgroepen" element={<WerkgroepenPage />} />
               </Route>
               <Route path="/auth/callback" element={<AuthCallbackPage />} />
-              <Route path="/setup" element={<SetupPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
@@ -44,7 +49,7 @@ function App() {
   return (
     <QueryProvider>
       <AuthProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={routerBasename || undefined}>
           <AppContent />
         </BrowserRouter>
       </AuthProvider>
