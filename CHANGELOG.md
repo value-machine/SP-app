@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.1] - 2026-03-30
+
+### Added
+
+- **GitHub Pages**: CI-workflow deployt bij elke push naar `main` naar GitHub Pages (Vite `base` voor subpath, React Router `basename`, `404.html` voor SPA-deep links). Zet in de repo dezelfde `VITE_*` secrets als in `.env.example` voor een werkende productie-build.
+
 ## [0.15.0] - 2026-03-30
 
 ### Added

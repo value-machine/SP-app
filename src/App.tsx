@@ -14,6 +14,9 @@ const WerkgroepenPage = lazy(() =>
   import("@pages/Werkgroepen/WerkgroepenPage").then((m) => ({ default: m.WerkgroepenPage }))
 );
 
+/** Matches Vite `base` (no trailing slash); root build uses empty basename */
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 function AppContent() {
   const theme = useTheme();
 
@@ -46,7 +49,7 @@ function App() {
   return (
     <QueryProvider>
       <AuthProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={routerBasename || undefined}>
           <AppContent />
         </BrowserRouter>
       </AuthProvider>
