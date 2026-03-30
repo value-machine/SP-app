@@ -16,7 +16,7 @@ Delete all starter setup files and update references. The AI must trace imports 
 - `src/features/setup/` (all files: components, hooks, services, types, views)
 
 **Scripts:**
-- Remove app-config validation script from `scripts/`
+- `scripts/validate-app-config.js`
 
 **Config & plugin:**
 - `app.config.json`
@@ -62,11 +62,17 @@ Remove `app.config.json` and `vite-plugin-dev-api.ts` from the root-level whitel
 
 - Remove `validate:app-config` script from `package.json`
 - Remove the "App config validation" step from `.github/workflows/ci.yml`
-- Delete the app-config validation script from `scripts/`
+- Delete `scripts/validate-app-config.js`
 
 ### 7. Delete Boilerplate-Only Documentation
 
-Delete setup/app-config docs in `documentation/` that only exist for the setup wizard flow.
+Delete these docs (they reference setup wizard, app.config.json, or finish-setup flow):
+
+- `documentation/DOC_APP_CONFIG_FILE.md`
+- `documentation/DOC_SETUP_STATES_AND_TRANSITIONS.md`
+- `documentation/DOC_TESTING_SUPABASE_SETUP.md`
+- `documentation/DOC_TESTING_APP_CONFIG.md`
+- `documentation/DOC_APP_CODE_MODIFICATION.md`
 
 ### 8. Update Remaining Docs
 
@@ -81,7 +87,7 @@ Delete setup/app-config docs in `documentation/` that only exist for the setup w
 
 After deleting docs, run a repository-wide search and remove or update references to deleted files:
 
-- Search for references to deleted setup/app-config docs and remove dead links.
+- Search for: `DOC_APP_CONFIG_FILE.md`, `DOC_SETUP_STATES_AND_TRANSITIONS.md`, `DOC_TESTING_SUPABASE_SETUP.md`, `DOC_TESTING_APP_CONFIG.md`, `DOC_APP_CODE_MODIFICATION.md`
 - Update links in remaining docs (README, ARCHITECTURE, documentation/*) so there are no dead links
 - If any hits appear under protected files (e.g. `.cursor/**`), do not auto-edit; ask the user first per workflow protected-file rules
 
@@ -93,7 +99,7 @@ The setup feature directory (`src/features/setup/`) is deleted in step 1, which 
 
 ### 11. Delete Start Command
 
-Delete onboarding start command files after setup-removal is complete.
+Delete `.claude/commands/start.md` after setup-removal is complete. It is only needed while onboarding from the boilerplate.
 
 ## Notes
 

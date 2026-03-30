@@ -41,8 +41,7 @@ export const getCustomTheme = (): ThemeOptions | null => {
  * Save custom theme to localStorage
  * @param themeOptions - Theme options to save
  *
- * Note: This function does NOT automatically sync to app.config.json.
- * Call syncConfiguration() separately after saving theme if needed.
+ * Note: This function only writes browser localStorage and does not persist to server-side config.
  */
 export const saveCustomTheme = (themeOptions: ThemeOptions): void => {
   try {
@@ -55,8 +54,7 @@ export const saveCustomTheme = (themeOptions: ThemeOptions): void => {
 /**
  * Remove custom theme (revert to default)
  *
- * Note: This function does NOT automatically sync to app.config.json.
- * Call syncConfiguration() separately after removing theme if needed.
+ * Note: This function only updates browser localStorage.
  */
 export const removeCustomTheme = (): void => {
   localStorage.removeItem(CUSTOM_THEME_STORAGE_KEY);

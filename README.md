@@ -165,18 +165,16 @@ git fetch upstream
 pnpm dev
 ```
 
-The app runs at `http://localhost:5173/` (or another port if 5173 is busy) and redirects to setup on first run.
+The app runs at `http://localhost:5173/` (or another port if 5173 is busy).
 
-### Step 5: Complete the setup wizard
+### Step 5: Configure environment variables
 
-All setup sections are optional. Configure what you need now and skip the rest.
-
-#### Supabase (optional, needed for auth/database) 🔐
+Supabase is optional, but required for authentication.
 
 1. Create a project at [supabase.com](https://supabase.com).
 2. Go to **Project Settings -> API**.
 3. Copy your **Project URL** and **Publishable Key**.
-4. In the setup wizard, test the connection and create `.env` in project root:
+4. Create a `.env` file in project root:
 
 ```bash
 VITE_SUPABASE_URL=your-project-url
@@ -187,18 +185,9 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 
 Legacy note: `VITE_SUPABASE_ANON_KEY` is still accepted for backward compatibility.
 
-#### Airtable (optional) 📊
-
-Enter API key, Base ID, and Table ID in setup to enable Airtable integration.
-
-#### Theme customization (optional) 🎨
-
-Use [MUI Theme Creator](https://bareynol.github.io/mui-theme-creator/) and paste the JSON in the theme step.
-
 ### Step 6: Verify app routes
 
 - Home: `http://localhost:5173/`
-- Setup: `http://localhost:5173/setup`
 - Login (when Supabase configured): `http://localhost:5173/login`
 
 ### You're ready
@@ -209,21 +198,6 @@ Start building features on `feature/*` branches and merge through `experimental`
 
 For detailed installation instructions, see the [Quick Start Guide](#quick-start-guide) above.
 
-### Optional: Manual Supabase Setup
-
-If you prefer to set up Supabase manually instead of using the setup wizard (recommended: use the [setup wizard](#step-5-complete-the-setup-wizard) instead):
-
-1. Create a `.env` file in the project root directory
-
-2. Add your Supabase credentials to `.env`:
-```
-VITE_SUPABASE_URL=your-project-url
-VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
-```
-**Note:** The legacy `VITE_SUPABASE_ANON_KEY` also works for backward compatibility.
-
-3. Restart the development server for environment variables to take effect
-
 ### Features
 
 - ✅ **Authentication**: Supabase authentication (when configured)
@@ -233,20 +207,13 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 
 ### Configuring Supabase Later
 
-If you skipped Supabase setup initially, you can configure it anytime:
+If you skipped Supabase configuration initially, you can configure it anytime:
 
-1. Navigate to `/setup` in your running app
-2. Follow the setup wizard steps to configure Supabase credentials
-3. Create the `.env` file with your credentials (see [Manual Supabase Setup](#optional-manual-supabase-setup))
-4. **Restart your development server** (`Ctrl+C` then `pnpm dev`)
+1. Create or update your `.env` file with Supabase credentials
+2. **Restart your development server** (`Ctrl+C` then `pnpm dev`)
 
 
 ### Troubleshooting
-
-**Setup wizard not appearing?**
-- Make sure you're accessing `http://localhost:5173/` (or the port shown in your terminal)
-- Clear your browser's local storage and reload
-- Check that the dev server is running
 
 **Supabase connection failing?**
 - Verify your credentials are correct (check for typos)

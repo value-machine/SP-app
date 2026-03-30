@@ -1,18 +1,17 @@
----
-name: learn
-description: >-
-  Turns recent code changes, failures, and conversation mistakes into durable guidance.
-  Use when the user runs /learn, asks for a retrospective or to sharpen rules, or after
-  resolving a multi-turn struggle (e.g. 3+ failed attempts, critical CI fix).
+# learn
+
+Turns recent code changes, failures, and conversation mistakes into durable guidance.
+Use after resolving a multi-turn struggle (3+ failed attempts, critical CI fix), or when asked to retrospect or sharpen rules.
+
 ---
 
 # Learn from changes and sharpen rules
 
 Extract lessons from **what just happened** (diffs, errors, retries) and persist them where the assistant will see them **before** the same mistake repeats. Prefer **one primary home** per lesson; cross-link instead of duplicating.
 
-**Related:** Rule quality heuristics: `.cursor/commands/improve-rule.md`. Finish/changelog flow: `.cursor/commands/finish.md`.
+**Related:** Rule quality heuristics: `.claude/commands/improve-rule.md`. Finish/changelog flow: `.claude/commands/finish.md`.
 
-**This project:** In-repo skills live under `.cursor/skills/<name>/SKILL.md` (whitelisted in `projectStructure.config.cjs`). Add new skills as new folders with a `SKILL.md`; do not create other file types under `skills/` unless the whitelist is extended.
+**This project:** 
 
 ---
 
@@ -33,7 +32,7 @@ Durable, discoverable guidance with minimal duplication.
 
 ### 0. Context audit
 
-- Read `.cursor/rules/INDEX.md` and any rule files that match the lesson domain.
+- Read `CLAUDE.md` and any rule files that match the lesson domain.
 - **Deduplicate:** Update an existing subsection if the lesson fits; add new only when no home fits.
 
 ### 1. Inspect what happened
@@ -59,29 +58,29 @@ Pick **one primary** location. Cross-link elsewhere in one line if needed — ne
 
 | Lesson type | Primary location (this repo) |
 |-------------|-------------------------------|
-| Postgres migrations, Supabase schema, RLS, idempotent migrations | `.cursor/rules/database/RULE.md` |
-| Local dev URLs, `pnpm dev`, env wiring, Supabase runtime checks | `.cursor/rules/workflow/RULE.md` |
-| Auth, secrets, validation | `.cursor/rules/security/RULE.md` |
-| Folder placement, imports, layers, path aliases | `.cursor/rules/architecture/RULE.md` or `.cursor/rules/file-placement/RULE.md` |
-| Vitest, coverage, test layout | `.cursor/rules/testing/RULE.md` |
-| Changelog, version, finish / branch strategy | `.cursor/rules/workflow/RULE.md` or `.cursor/commands/finish.md` |
-| Known symptom → fix pattern (repeatable) | `.cursor/commands/debug.md` § **Common Error Pattern Recognition** |
-| Edge Functions vs frontend | `.cursor/rules/cloud-functions/RULE.md` |
+| Postgres migrations, Supabase schema, RLS, idempotent migrations | `CLAUDE.md` |
+| Local dev URLs, `pnpm dev`, env wiring, Supabase runtime checks | `CLAUDE.md` |
+| Auth, secrets, validation | `CLAUDE.md` |
+| Folder placement, imports, layers, path aliases | `CLAUDE.md` or `CLAUDE.md` |
+| Vitest, coverage, test layout | `CLAUDE.md` |
+| Changelog, version, finish / branch strategy | `CLAUDE.md` or `.claude/commands/finish.md` |
+| Known symptom → fix pattern (repeatable) | `.claude/commands/debug.md` § **Common Error Pattern Recognition** |
+| Edge Functions vs frontend | `CLAUDE.md` |
 | TanStack Query, server state | `ARCHITECTURE.md`, `documentation/DOC_TANSTACK_QUERY.md`, or feature `api/` keys patterns (one primary) |
-| Long procedural workflow | Relevant `.cursor/commands/*.md` |
-| Reusable multi-step procedure (not a one-line rule) | New or existing `.cursor/skills/<name>/SKILL.md` in this repo, or a user-level skill outside the repo |
+| Long procedural workflow | Relevant `.claude/commands/*.md` |
+| Reusable multi-step procedure (not a one-line rule) | New or existing `.claude/commands/learn.md` in this repo, or a user-level skill outside the repo |
 
-Confirm ownership via `.cursor/rules/INDEX.md`.
+Confirm ownership via `CLAUDE.md`.
 
 **Procedures vs rules:** Single-line constraints belong in the right `RULE.md`. Use a **skill** (this folder pattern or user skills) when the lesson is a reusable workflow the agent should follow step-by-step.
 
-**Tiering:** Use `[CRITICAL]` / `[HINT]` only if the target file already uses that style; otherwise use clear “Always” / “Never” per `.cursor/commands/improve-rule.md`.
+**Tiering:** Use `[CRITICAL]` / `[HINT]` only if the target file already uses that style; otherwise use clear “Always” / “Never” per `.claude/commands/improve-rule.md`.
 
 ### 4. Apply the edit
 
 - Read the target file (or section); match tone and structure.
 - **Imperatives:** Direct verbs (“Always…”, “Never…”).
-- **Examples:** Short `// BAD` / `// GOOD` only where this repo already uses code in that file (e.g. `debug.md` patterns). For `RULE.md` edits, prefer concise bullets; follow `.cursor/commands/improve-rule.md` when tightening prose.
+- **Examples:** Short `// BAD` / `// GOOD` only where this repo already uses code in that file (e.g. `debug.md` patterns). For `RULE.md` edits, prefer concise bullets; follow `.claude/commands/improve-rule.md` when tightening prose.
 - **Minimal diff:** Small subsection or bullet group; merging duplicates in the same section is fine. Large rewrites need **explicit user confirmation**.
 
 ### 5. Report
@@ -99,4 +98,4 @@ Confirm ownership via `.cursor/rules/INDEX.md`.
 - Duplicating the same lesson across many files.
 - Putting secrets or new credentials in rules or skills.
 - Rewriting large rule sections without approval.
-- Adding files under `.cursor/skills/` that are not allowed by `projectStructure.config.cjs` (currently: each subfolder may contain `SKILL.md` only).
+- Adding commands that are not relevant to this project to `.claude/commands/`.

@@ -3,7 +3,7 @@
 Load project context at the start of a new session. Build an understanding of this boilerplate’s structure, governance, and active state before tackling tasks.
 
 **When to use:** New chat, ambiguous task, or before larger refactors.  
-**Related:** For feature requests and completeness gates, use `.cursor/commands/check.md`.
+**Related:** For feature requests and completeness gates, use `.claude/commands/check.md`. For onboarding a human, use `.claude/commands/start.md`.
 
 ## Objective
 
@@ -18,14 +18,14 @@ Align with project rules and architecture so work does not violate enforced boun
 - **Tracked files:** Run `git ls-files` (large repos: in PowerShell use `git ls-files | Select-Object -First 150` instead of `head`).
 - **Architecture overview:** Read `ARCHITECTURE.md` (folder layout, TanStack Query, layers, path aliases).
 - **Doc index:** Read `documentation/DOC_INDEX.md` (SSOT map, quick links).
-- **Features (discover, do not assume):** List `src/features/` and report only what is present in this repository. Do not use a fixed feature list from another repo.
+- **Features (discover, do not assume):** List `src/features/` — this boilerplate ships with **`auth`** and **`setup`** only; forks may add more. Do not use a fixed feature list from another repo.
 - **Entry points:** Read `index.html`, `src/main.tsx`, `src/App.tsx` (provider order: `QueryProvider` → `AuthProvider` → `BrowserRouter`).
 
 ### 2. Governance and rules
 
-- **Rule index:** Read `.cursor/rules/INDEX.md`.
-- **Architecture SSOT:** Read `.cursor/rules/architecture/RULE.md` (layers, path aliases `@/*`, import direction, structure whitelist).
-- **File placement:** Read `.cursor/rules/file-placement/RULE.md` — validation uses **`projectStructure.config.cjs`** (not `.js`).
+- **Rule index:** Read `CLAUDE.md`.
+- **Architecture SSOT:** Read `CLAUDE.md` (layers, path aliases `@/*`, import direction, structure whitelist).
+- **File placement:** Read `CLAUDE.md` — validation uses **`projectStructure.config.cjs`** (not `.js`).
 
 ### 3. Dependencies and boundaries
 
@@ -35,7 +35,7 @@ Align with project rules and architecture so work does not violate enforced boun
 ### 4. Active project state
 
 - **Recent activity:** `git log -n 10` (full commit messages: subject and body; do not use `--oneline`)
-- **Working tree:** `git status -sb` (confirm branch: feature work should not be on `main`; see `.cursor/rules/workflow/RULE.md`)
+- **Working tree:** `git status -sb` (confirm branch: feature work should not be on `main`; see `CLAUDE.md`)
 - **Optional plans:** Scan `documentation/jobs/` for active work (e.g. `documentation/jobs/temp_job_*/`) when relevant.
 
 ---

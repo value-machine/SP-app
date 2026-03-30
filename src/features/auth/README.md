@@ -45,4 +45,3 @@ Returns: `{ user, loading, error, login, signUp, logout, signInWithGoogle, signI
 ## Related
 
 - `src/routes/guards/` – auth guards for protected routes
-- `documentation/DOC_APP_CODE_MODIFICATION.md` – setup removal flow (auth can be removed if Supabase disabled)

@@ -7,7 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-03-30
+
+### Added
+
+- **Werkgroepen-overzicht**: Nieuwe pagina `/werkgroepen` met MUI-accordions, iconen en ledenoverzicht voor bestuur, kerngroep, werkgroepen en tijdelijke commissies
+
+### Changed
+
+- **Branding**: Applicatietitel bijgewerkt naar `SP Utrecht` (topbar en browser-title)
+- **Developer workflow docs/rules**: Verwijzingen opgeschoond na setup-verwijdering in workflow/docs/skills en CI-validatiestappen
+
+### Removed
+
+- **Setup wizard boilerplate**: Volledige verwijdering van setup route, setup feature (`src/features/setup/**`), setup utils/tests, dev setup plugin (`vite-plugin-dev-api.ts`) en app-config validator
+- **Setup-specifieke documentatie**: Verwijderde setup/app-config documenten en dode links opgeschoond in resterende docs
+
 ## [0.14.0] - 2026-03-30
+
+### Added
+
+- **Werkgroepen-overzicht**: Pagina `/werkgroepen` met MUI (accordions, leden-tabel, iconen) voor bestuur, kerngroep, werkgroepen en tijdelijke commissies; statische content in `src/features/werkgroepen/services/werkgroepenStaticData.ts`; link in topbar
 
 ### Changed
 

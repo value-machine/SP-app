@@ -5,7 +5,6 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-/** Dev-only: bypass real connection for testing. See DOC_TESTING_SUPABASE_SETUP.md */
 const TEST_BYPASS_URL = "https://test-local.supabase.co";
 const TEST_BYPASS_KEY = "test-anon-key-for-local-testing";
 
@@ -54,7 +53,9 @@ export const initSupabase = (): SupabaseClient | null => {
  */
 export const getSupabase = (): SupabaseClient => {
   if (!isSupabaseConfigured() || !supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase is not configured. Please complete the setup wizard.");
+    throw new Error(
+      "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
+    );
   }
 
   if (!supabase) {

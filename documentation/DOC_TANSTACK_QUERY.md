@@ -118,7 +118,6 @@ Supabase uses Row Level Security (RLS). Always include `userId` in the query key
 | Data type             | staleTime       | gcTime           | Notes                              |
 | --------------------- | --------------- | ---------------- | ---------------------------------- |
 | User profile          | 5 min (default) | 30 min (default) | Invalidated on profile update      |
-| Config sections       | 10 min          | 1 hour           | Setup wizard data, rarely changes  |
 | Lists (e.g. projects) | 5 min           | 30 min           | Invalidate on create/update/delete |
 | Detail (e.g. project) | 2–5 min         | 30 min           | Invalidate on update/delete        |
 | Realtime data         | 0               | 5 min            | Polling or websocket-driven        |
@@ -157,28 +156,13 @@ Mock `queryClient` in service tests when the service uses it (e.g. invalidation 
 Unit tests cover hooks and services. The following require **manual verification**:
 
 - Login/logout flow and cache clear on logout
-- Prefetching on hover over Setup links
 - Cached data when navigating back
 
 See `documentation/jobs/implementation-plan-tanstack-query.md` – Step 9 "Not covered by automated tests".
 
-## Prefetching
-
-**File:** `src/shared/hooks/usePrefetch.ts`
-
-- Use `prefetchSetup` on hover over Setup links to preload config data
-- **Rule:** Only prefetch for critical routes; measure before adding more
-
-```tsx
-const { prefetchSetup } = usePrefetch();
-<Link to="/setup" onMouseEnter={prefetchSetup}>
-  Setup
-</Link>;
-```
-
 ## Lazy loading + Suspense
 
-- Lazy load heavy pages: `lazy(() => import("@pages/SetupPage"))`
+- Lazy load heavy pages and route-level components
 - Wrap routes in `<Suspense fallback={<PageLoadingState />}>`
 - Cached query data + code splitting = fast navigation on return visits
 

@@ -17,7 +17,6 @@ Development workflows, code review standards, and process requirements. Includes
 | Architecture patterns, layer rules, code placement | `.cursor/rules/architecture/RULE.md` |
 | Project structure, file whitelist | `projectStructure.config.cjs` |
 | Dependency/architecture enforcement | `.dependency-cruiser.cjs` |
-| App config schema (boilerplate only; removed by complete-setup) | `documentation/DOC_APP_CONFIG_FILE.md` |
 
 ## Code Review Process
 
@@ -108,7 +107,7 @@ When updating the changelog with a new version, update two locations to maintain
 
 Both locations must use the same version number. If the app displays version in the UI (e.g. via `VITE_APP_VERSION`), update that location too; this boilerplate does not display version in ProfileMenu by default.
 
-**Note:** When the setup wizard exists, `app.config.json` has its own `version` field for config schema compatibility; it is independent of release version. See `documentation/DOC_APP_CONFIG_FILE.md`. After running complete-setup, configuration lives in `.env` only.
+**Note:** This repo uses `package.json` and `CHANGELOG.md` as release version sources. Configuration lives in `.env` for runtime settings.
 
 ### Branch Strategy
 
