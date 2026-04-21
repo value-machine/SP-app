@@ -50,3 +50,33 @@ export const handleLogout = async (state: AuthHandlerState): Promise<void> => {
   }
   state.setLoading(false);
 };
+
+export const handleResetPassword = async (
+  email: string,
+  state: AuthHandlerState
+): Promise<{ ok: boolean }> => {
+  state.setLoading(true);
+  state.setError(null);
+  const { error } = await authService.resetPasswordForEmail(email);
+  state.setLoading(false);
+  if (error) {
+    state.setError(error.message);
+    return { ok: false };
+  }
+  return { ok: true };
+};
+
+export const handleUpdatePassword = async (
+  newPassword: string,
+  state: AuthHandlerState
+): Promise<{ ok: boolean }> => {
+  state.setLoading(true);
+  state.setError(null);
+  const { error } = await authService.updatePassword(newPassword);
+  state.setLoading(false);
+  if (error) {
+    state.setError(error.message);
+    return { ok: false };
+  }
+  return { ok: true };
+};

@@ -14,6 +14,7 @@
 const { execSync } = require("child_process");
 
 const FEATURE_LAYER_FOLDERS = new Set([
+  "api",
   "components",
   "hooks",
   "services",

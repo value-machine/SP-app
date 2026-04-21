@@ -1,0 +1,8 @@
+# Minimal Supabase CLI config. Link project with: supabase link --project-ref <ref>
+# See https://supabase.com/docs/guides/cli/config
+
+[api]
+enabled = true
+
+[db]
+major_version = 15

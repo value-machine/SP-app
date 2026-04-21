@@ -5,12 +5,8 @@ import { useAuthRedirect } from "./useAuthRedirect";
 import { useAuthContext } from "@/shared/context/AuthContext";
 import * as redirectUtils from "@/utils/redirectUtils";
 
-// Mock dependencies
 vi.mock("@/shared/context/AuthContext");
 vi.mock("@/utils/redirectUtils");
-vi.mock("@config/entreefederatie", () => ({
-  getEntreefederatieDomain: vi.fn(() => "example.com"),
-}));
 
 const mockNavigate = vi.fn();
 
@@ -30,8 +26,8 @@ describe("useAuthRedirect", () => {
     login: vi.fn(),
     signUp: vi.fn(),
     logout: vi.fn(),
-    signInWithGoogle: vi.fn(),
-    signInWithEntreefederatie: vi.fn(),
+    resetPassword: vi.fn(),
+    updatePassword: vi.fn(),
   };
 
   beforeEach(() => {
@@ -42,7 +38,6 @@ describe("useAuthRedirect", () => {
       // Ignore errors
     }
     mockNavigate.mockClear();
-    // Set default mock return value
     vi.mocked(useAuthContext).mockReturnValue(defaultAuthContext);
   });
 
@@ -50,13 +45,12 @@ describe("useAuthRedirect", () => {
     <BrowserRouter>{children}</BrowserRouter>
   );
 
-  it("should redirect to stored path when user logs in successfully", async () => {
+  it("redirects to stored path on successful login", async () => {
     const mockGetAndClearRedirectPath = vi.spyOn(redirectUtils, "getAndClearRedirectPath");
     mockGetAndClearRedirectPath.mockReturnValue("/dashboard");
 
     const { rerender } = renderHook(() => useAuthRedirect(), { wrapper });
 
-    // User logs in
     vi.mocked(useAuthContext).mockReturnValue({
       ...defaultAuthContext,
       user: { id: "123", email: "test@example.com", created_at: "2024-01-01" },
@@ -70,13 +64,12 @@ describe("useAuthRedirect", () => {
     });
   });
 
-  it("should redirect to home when no stored path exists", async () => {
+  it("redirects to home when no stored path exists", async () => {
     const mockGetAndClearRedirectPath = vi.spyOn(redirectUtils, "getAndClearRedirectPath");
     mockGetAndClearRedirectPath.mockReturnValue(null);
 
     const { rerender } = renderHook(() => useAuthRedirect(), { wrapper });
 
-    // User logs in
     vi.mocked(useAuthContext).mockReturnValue({
       ...defaultAuthContext,
       user: { id: "123", email: "test@example.com", created_at: "2024-01-01" },
@@ -90,7 +83,7 @@ describe("useAuthRedirect", () => {
     });
   });
 
-  it("should not redirect when user is loading", () => {
+  it("does not redirect while loading", () => {
     const mockGetAndClearRedirectPath = vi.spyOn(redirectUtils, "getAndClearRedirectPath");
 
     vi.mocked(useAuthContext).mockReturnValue({
@@ -105,7 +98,7 @@ describe("useAuthRedirect", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("should not redirect when there is an error", () => {
+  it("does not redirect when an error is present", () => {
     const mockGetAndClearRedirectPath = vi.spyOn(redirectUtils, "getAndClearRedirectPath");
 
     vi.mocked(useAuthContext).mockReturnValue({
@@ -120,7 +113,7 @@ describe("useAuthRedirect", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("should not redirect multiple times", async () => {
+  it("does not redirect more than once for the same sign-in", async () => {
     const mockGetAndClearRedirectPath = vi.spyOn(redirectUtils, "getAndClearRedirectPath");
     mockGetAndClearRedirectPath.mockReturnValue("/dashboard");
 
@@ -135,8 +128,6 @@ describe("useAuthRedirect", () => {
       expect(mockNavigate).toHaveBeenCalledTimes(1);
     });
 
-    // Rerender multiple times - should not redirect again
-    rerender();
     rerender();
     rerender();
 
@@ -145,13 +136,12 @@ describe("useAuthRedirect", () => {
     });
   });
 
-  it("should reset redirect flag when user logs out", async () => {
+  it("resets the redirect flag when the user logs out", async () => {
     const mockGetAndClearRedirectPath = vi.spyOn(redirectUtils, "getAndClearRedirectPath");
     mockGetAndClearRedirectPath.mockReturnValue("/dashboard");
 
     const { rerender } = renderHook(() => useAuthRedirect(), { wrapper });
 
-    // User logs in
     vi.mocked(useAuthContext).mockReturnValue({
       ...defaultAuthContext,
       user: { id: "123", email: "test@example.com", created_at: "2024-01-01" },
@@ -167,20 +157,16 @@ describe("useAuthRedirect", () => {
     mockGetAndClearRedirectPath.mockClear();
     mockGetAndClearRedirectPath.mockReturnValue("/dashboard");
 
-    // User logs out
     vi.mocked(useAuthContext).mockReturnValue({
       ...defaultAuthContext,
       user: null,
     });
-
     rerender();
 
-    // User logs in again - should redirect again
     vi.mocked(useAuthContext).mockReturnValue({
       ...defaultAuthContext,
       user: { id: "123", email: "test@example.com", created_at: "2024-01-01" },
     });
-
     rerender();
 
     await waitFor(() => {
@@ -188,9 +174,8 @@ describe("useAuthRedirect", () => {
     });
   });
 
-  it("should return a function to reset redirect flag", () => {
+  it("returns a reset function", () => {
     vi.mocked(useAuthContext).mockReturnValue(defaultAuthContext);
-
     const { result } = renderHook(() => useAuthRedirect(), { wrapper });
 
     expect(typeof result.current).toBe("function");

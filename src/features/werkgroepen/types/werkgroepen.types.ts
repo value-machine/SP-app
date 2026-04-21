@@ -20,13 +20,37 @@ export interface OrganisatieLid {
   note?: string;
 }
 
+export interface OrganisatieResponsibilitySubtask {
+  id: string;
+  title: string;
+  bodyMd: string | null;
+  sortOrder: number;
+  done: boolean;
+}
+
+export interface OrganisatieResponsibilityAssignee {
+  personId: string;
+  fullName: string;
+  note?: string;
+}
+
+export interface OrganisatieResponsibility {
+  id: string;
+  title: string;
+  descriptionMd: string;
+  sortOrder: number;
+  subtasks: OrganisatieResponsibilitySubtask[];
+  assignees: OrganisatieResponsibilityAssignee[];
+}
+
 export interface OrganisatieGroep {
   id: string;
   title: string;
+  /** Markdown (rich text) */
   description: string;
   members: OrganisatieLid[];
   iconKey: OrganisatieIconKey;
-  extraBulletPoints?: string[];
+  responsibilities: OrganisatieResponsibility[];
 }
 
 export interface OrganisatieSection {

@@ -8,40 +8,19 @@ interface ProfileChipsProps {
 
 export const ProfileChips = ({ profile }: ProfileChipsProps) => {
   const roleDisplay = getRoleDisplay(profile);
-  const hasCredits = profile.remaining_credits !== null && profile.remaining_credits !== undefined;
-  const hasOrganization = Boolean(profile.ef_nl_edu_person_home_organization);
 
-  if (!roleDisplay && !hasCredits && !hasOrganization) {
+  if (!roleDisplay) {
     return null;
   }
 
   return (
     <Box sx={{ display: "flex", gap: 0.5, mt: 0.5, flexWrap: "wrap" }}>
-      {roleDisplay && (
-        <Chip
-          label={roleDisplay}
-          size="small"
-          variant="outlined"
-          sx={{ fontSize: (theme) => theme.typography.caption.fontSize }}
-        />
-      )}
-      {hasCredits && (
-        <Chip
-          label={`${profile.remaining_credits} credits`}
-          size="small"
-          variant="outlined"
-          color="primary"
-          sx={{ fontSize: (theme) => theme.typography.caption.fontSize }}
-        />
-      )}
-      {hasOrganization && (
-        <Chip
-          label={profile.ef_nl_edu_person_home_organization}
-          size="small"
-          variant="outlined"
-          sx={{ fontSize: (theme) => theme.typography.caption.fontSize }}
-        />
-      )}
+      <Chip
+        label={roleDisplay}
+        size="small"
+        variant="outlined"
+        sx={{ fontSize: (theme) => theme.typography.caption.fontSize }}
+      />
     </Box>
   );
 };

@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-04-21
+
+### Added
+
+- **Email/password auth pages**: `/login`, `/signup`, `/forgot-password`, `/update-password` with Dutch UI, centered card layout (`AuthPageShell`), and forms under `src/features/auth/components/`
+- **Password reset flow**: `resetPasswordForEmail` + `updatePassword` in `authService`; `useUpdatePasswordSession` hook gates the `/update-password` form on a `PASSWORD_RECOVERY` event so a regular session can't silently change the password
+- **ProfileMenu**: "Inloggen" and "Registreren" entries navigate to `/login` / `/signup`, and stash the current path via `storeRedirectPath` (router-relative, basename-stripped) for post-login redirect
+- **`buildAppUrl` utility** (`src/utils/appUrl.ts`): constructs absolute URLs honoring Vite `BASE_URL` so Supabase redirect links (email confirmation, password reset) land on the correct deployed subpath (e.g. GitHub Pages `/SP-app/`)
+- Tests for new forms (`LoginForm`, `SignupForm`, `UpdatePasswordForm`), `buildAppUrl`, and refreshed auth-service + ProfileMenu + `useAuthRedirect` tests
+
+### Changed
+
+- **`useAuth` / `AuthContext`**: exposes `resetPassword`, `updatePassword`; no longer exposes `signInWithGoogle` / `signInWithEntreefederatie`
+- **Signup errors**: duplicate email (Supabase's empty-`identities` signal) is surfaced as a Dutch friendly message instead of silent success
+- **`redirectUtils`**: `/forgot-password` and `/update-password` are excluded from the stored-redirect allowlist
+
+### Removed
+
+- **Google OAuth and Entreefederatie (SAML) sign-in**: `signInWithGoogle`, `signInWithEntreefederatie`, `src/config/entreefederatie.ts`, and the related menu items
+
+## [0.16.0] - 2026-04-20
+
+### Added
+
+- **Supabase schema (migrations)**: `public.people` (with auth sync triggers), `organisatie_sections`, `organisatie_groups`, `group_memberships`, `responsibilities`, `responsibility_subtasks`, `responsibility_assignees`; RLS (public read, admin write via `people.is_admin`); seed for werkgroepen content
+- **Werkgroepen data from Supabase**: `/werkgroepen` loads via TanStack Query (`useWerkgroepenQuery`), markdown rendering (`MarkdownContent`), responsibilities list with optional subtasks and assignees
+- **`src/shared/types/database.types.ts`**: typed `SupabaseClient<Database>`
+
+### Changed
+
+- **Profiles**: `userProfileService` reads/writes `public.people` by `user_id` (auth id); `UserProfile` type aligned to people columns; profile menu shows Admin chip from `is_admin` only
+
+### Fixed
+
+- **`validate:feature-docs:staged`**: Treat `src/features/*/api/` as a layer of the flat feature (with `hooks/`, `services/`, etc.) so changes under `api/` require the parent feature `README.md`, not a separate `api/README.md`.
+
+### Removed
+
+- **Legacy `public.users` table** (migration) and static `werkgroepenStaticData.ts`
+
 ## [0.15.1] - 2026-03-30
 
 ### Added

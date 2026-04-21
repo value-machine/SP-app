@@ -5,7 +5,9 @@ import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 
+import { MarkdownContent } from "@/components/common/MarkdownContent";
 import { OrganisatieIcon } from "@/features/werkgroepen/components/OrganisatieIcon";
+import { ResponsibilitiesList } from "@/features/werkgroepen/components/ResponsibilitiesList";
 import { WerkgroepenMembersTable } from "@/features/werkgroepen/components/WerkgroepenMembersTable";
 import type { OrganisatieGroep } from "@/features/werkgroepen/types/werkgroepen.types";
 
@@ -29,32 +31,10 @@ export const OrganisatieGroepAccordion = ({
         </Box>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography
-          variant="body2"
-          component="div"
-          sx={{ whiteSpace: "pre-line", mb: group.extraBulletPoints?.length ? 2 : 0 }}
-        >
-          {group.description}
-        </Typography>
-        {group.extraBulletPoints && group.extraBulletPoints.length > 0 ? (
-          <>
-            <Typography variant="subtitle2" gutterBottom>
-              Overige taken
-            </Typography>
-            <Box component="ul" sx={{ pl: 2.5, m: 0, mb: 2 }}>
-              {group.extraBulletPoints.map((item, index) => (
-                <Typography
-                  key={`${group.id}-extra-${index}`}
-                  component="li"
-                  variant="body2"
-                  sx={{ mb: 0.5 }}
-                >
-                  {item}
-                </Typography>
-              ))}
-            </Box>
-          </>
-        ) : null}
+        <Box sx={{ mb: group.responsibilities.length > 0 ? 1 : 0 }}>
+          <MarkdownContent markdown={group.description} />
+        </Box>
+        <ResponsibilitiesList responsibilities={group.responsibilities} groupSlug={group.id} />
         <WerkgroepenMembersTable members={group.members} emptyLabel={membersEmptyLabel} />
       </AccordionDetails>
     </Accordion>

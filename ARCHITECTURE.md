@@ -24,11 +24,12 @@ src/
 │   │   ├── hooks/       # React hooks for feature logic
 │   │   ├── services/    # Pure functions, API calls
 │   │   └── types/       # TypeScript types for feature
-│   ├── setup/
-│   │   ├── components/  # Setup wizard UI components
-│   │   │   └── sections/ # Setup section components
-│   │   ├── hooks/       # Setup-related hooks
-│   │   └── services/    # Setup-related services (API calls)
+│   ├── werkgroepen/
+│   │   ├── api/         # TanStack Query keys
+│   │   ├── components/  # Werkgroepen UI (accordions, responsibilities)
+│   │   ├── hooks/       # e.g. useWerkgroepenQuery
+│   │   ├── services/    # Supabase loaders and shape helpers
+│   │   └── types/       # Werkgroepen view types
 ├── layouts/             # Layout components
 │   └── MainLayout/      # Main layout component
 ├── pages/               # Route-level page components
@@ -55,7 +56,7 @@ Server state (user profiles, config, API data) is managed by **TanStack Query**.
 
 - **Query keys:** Shared keys in `src/shared/utils/queryKeys.ts` – feature keys in `features/[feature]/api/keys.ts`
 - **Auth boundary:** On logout, `queryClient.clear()` in `authService.logout` (before `signOut()`)
-- **Features:** `useUserProfileQuery` (auth), `useConfigurationQuery` (setup) – legacy wrappers (`useUserProfile`, `useConfigurationData`) remain for backward compatibility
+- **Features:** `useUserProfileQuery` (auth), `useWerkgroepenQuery` (werkgroepen) – legacy wrapper `useUserProfile` remains for backward compatibility
 
 See `documentation/DOC_TANSTACK_QUERY.md` for full reference.
 

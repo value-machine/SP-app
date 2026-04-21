@@ -12,10 +12,9 @@ interface ProfileMenuContentProps {
   user: User | null;
   profile: UserProfile | null;
   profileLoading: boolean;
-  onSignInWithGoogle: () => void;
-  onSignInWithEntreefederatie: () => void;
+  onNavigateToLogin: () => void;
+  onNavigateToSignup: () => void;
   onSignOut: () => void;
-  entreefederatieEnabled: boolean;
 }
 
 export const ProfileMenuContent = ({
@@ -24,10 +23,9 @@ export const ProfileMenuContent = ({
   user,
   profile,
   profileLoading,
-  onSignInWithGoogle,
-  onSignInWithEntreefederatie,
+  onNavigateToLogin,
+  onNavigateToSignup,
   onSignOut,
-  entreefederatieEnabled,
 }: ProfileMenuContentProps) => {
   if (isLoggedIn) {
     return (
@@ -38,7 +36,7 @@ export const ProfileMenuContent = ({
           <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
             <LogoutIcon fontSize="small" />
           </Box>
-          Sign Out
+          Uitloggen
         </MenuItem>
       </>
     );
@@ -47,9 +45,8 @@ export const ProfileMenuContent = ({
   if (supabaseConfigured) {
     return (
       <SignInMenuItems
-        onSignInWithGoogle={onSignInWithGoogle}
-        onSignInWithEntreefederatie={onSignInWithEntreefederatie}
-        entreefederatieEnabled={entreefederatieEnabled}
+        onNavigateToLogin={onNavigateToLogin}
+        onNavigateToSignup={onNavigateToSignup}
       />
     );
   }
@@ -59,7 +56,7 @@ export const ProfileMenuContent = ({
       <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
         <LoginIcon fontSize="small" />
       </Box>
-      Supabase not configured
+      Supabase is niet geconfigureerd
     </MenuItem>
   );
 };

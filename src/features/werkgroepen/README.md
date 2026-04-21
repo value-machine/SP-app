@@ -1,25 +1,28 @@
 # Werkgroepen-feature
 
-Publiek overzicht van bestuur, kerngroep, werkgroepen en tijdelijke commissies (statische content).
+Publiek overzicht van bestuur, kerngroep, werkgroepen en tijdelijke commissies. Data komt uit **Supabase** (`organisatie_*`, `people`, `responsibilities`, enz.).
 
 ## Purpose
 
 - Route: `/werkgroepen` (zie [`src/pages/Werkgroepen/WerkgroepenPage.tsx`](../../pages/Werkgroepen/WerkgroepenPage.tsx))
-- Toont titel, icoon, beschrijving en leden (naam, rol, e-mail, telefoon, opmerking) met placeholders waar geen gegevens zijn ingevuld
+- Toont titel, icoon, **markdown**-beschrijving, **verantwoordelijkheden** (met optionele subtasks en assignees), en leden (naam, rol, e-mail, telefoon, opmerking)
 
 ## Structure
 
 | Layer | Path | Purpose |
 |-------|------|---------|
-| Types | `types/werkgroepen.types.ts` | `OrganisatieGroep`, `OrganisatieLid`, secties |
-| Data | `services/werkgroepenStaticData.ts` | `getWerkgroepenStaticData()` |
-| Constants | `types/werkgroepen.types.ts` | `CONTACT_PLACEHOLDER` |
-| Hooks | `hooks/useWerkgroepenData.ts` | `useWerkgroepenData()` — memoized statische data |
-| Components | `components/` | `WerkgroepenPageContent`, accordions, leden-tabel, iconen |
+| Types | `types/werkgroepen.types.ts` | `OrganisatieGroep`, `OrganisatieLid`, `OrganisatieResponsibility`, secties |
+| API keys | `api/keys.ts` | TanStack Query keys |
+| Data | `services/werkgroepenService.ts` | `fetchWerkgroepenPageData()` — Supabase reads + shaping |
+| Hooks | `hooks/useWerkgroepenQuery.ts` | `useWerkgroepenQuery()` |
+| Components | `components/` | `WerkgroepenPageContent`, accordions, leden-tabel, `ResponsibilitiesList`, iconen |
+| Markdown | [`src/components/common/MarkdownContent.tsx`](../../components/common/MarkdownContent.tsx) | Rendert `description` / `descriptionMd` als markdown |
 
-## Content wijzigen
+## Database
 
-Alle teksten en leden staan in [`services/werkgroepenStaticData.ts`](services/werkgroepenStaticData.ts). Vervang `Nog te vullen` door echte e-mail/telefoon wanneer beschikbaar; `mailto:` en `tel:` links worden automatisch actief als het patroon klopt.
+Zie `supabase/migrations/` — o.a. `organisatie_sections`, `organisatie_groups`, `group_memberships`, `people`, `responsibilities`, `responsibility_subtasks`, `responsibility_assignees`. Seed in `20250421120005_seed_werkgroepen_content.sql`.
+
+Content beheren: Supabase Dashboard of (later) admin-UI. Profielen voor ingelogde gebruikers staan in `public.people` (`user_id` → `auth.users`).
 
 ## Iconen
 

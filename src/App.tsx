@@ -13,6 +13,14 @@ const HomePage = lazy(() => import("@pages/HomePage").then((m) => ({ default: m.
 const WerkgroepenPage = lazy(() =>
   import("@pages/Werkgroepen/WerkgroepenPage").then((m) => ({ default: m.WerkgroepenPage }))
 );
+const LoginPage = lazy(() => import("@pages/LoginPage").then((m) => ({ default: m.LoginPage })));
+const SignupPage = lazy(() => import("@pages/SignupPage").then((m) => ({ default: m.SignupPage })));
+const ForgotPasswordPage = lazy(() =>
+  import("@pages/ForgotPasswordPage").then((m) => ({ default: m.ForgotPasswordPage }))
+);
+const UpdatePasswordPage = lazy(() =>
+  import("@pages/UpdatePasswordPage").then((m) => ({ default: m.UpdatePasswordPage }))
+);
 
 /** Matches Vite `base` (no trailing slash); root build uses empty basename */
 const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -35,6 +43,10 @@ function AppContent() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/werkgroepen" element={<WerkgroepenPage />} />
               </Route>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/update-password" element={<UpdatePasswordPage />} />
               <Route path="/auth/callback" element={<AuthCallbackPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
