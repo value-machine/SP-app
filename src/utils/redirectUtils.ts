@@ -32,7 +32,9 @@ export const getAndClearRedirectPath = (): string | null => {
         storedPath.startsWith("/") &&
         !storedPath.startsWith("/login") &&
         !storedPath.startsWith("/auth") &&
-        !storedPath.startsWith("/signup")
+        !storedPath.startsWith("/signup") &&
+        !storedPath.startsWith("/forgot-password") &&
+        !storedPath.startsWith("/update-password")
       ) {
         return storedPath;
       }

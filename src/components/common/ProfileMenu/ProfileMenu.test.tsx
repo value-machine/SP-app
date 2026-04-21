@@ -1,19 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { ProfileMenu } from "../ProfileMenu";
 import { useAuthContext } from "@/shared/context/AuthContext";
 import { useUserProfile } from "@features/auth/hooks/useUserProfile";
 import { isSupabaseConfigured } from "@shared/services/supabaseService";
 import type { User } from "@features/auth/types/auth.types";
 
-// Mock dependencies
 vi.mock("@/shared/context/AuthContext");
 vi.mock("@features/auth/hooks/useUserProfile");
 vi.mock("@shared/services/supabaseService");
 
-const mockSignInWithGoogle = vi.fn();
-const mockSignInWithEntreefederatie = vi.fn();
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 const mockLogout = vi.fn();
 
 describe("ProfileMenu", () => {
@@ -24,8 +31,8 @@ describe("ProfileMenu", () => {
     login: vi.fn(),
     signUp: vi.fn(),
     logout: mockLogout,
-    signInWithGoogle: mockSignInWithGoogle,
-    signInWithEntreefederatie: mockSignInWithEntreefederatie,
+    resetPassword: vi.fn(),
+    updatePassword: vi.fn(),
   };
 
   const defaultUserProfile = {
@@ -35,6 +42,13 @@ describe("ProfileMenu", () => {
     refetch: vi.fn(),
   };
 
+  const renderMenu = () =>
+    render(
+      <MemoryRouter>
+        <ProfileMenu />
+      </MemoryRouter>
+    );
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useAuthContext).mockReturnValue(defaultAuthContext);
@@ -42,142 +56,84 @@ describe("ProfileMenu", () => {
     vi.mocked(isSupabaseConfigured).mockReturnValue(true);
   });
 
-  describe("Internal anchor mode (default)", () => {
-    it("should render trigger button when user is not logged in", () => {
-      render(<ProfileMenu />);
+  describe("rendering", () => {
+    it("renders the trigger button when logged out", () => {
+      renderMenu();
       expect(screen.getByRole("button")).toBeInTheDocument();
-      expect(screen.getByLabelText(/sign in/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/inloggen/i)).toBeInTheDocument();
     });
 
-    it("should render trigger button when user is logged in", () => {
-      const mockUser: User = {
-        id: "123",
-        email: "test@example.com",
-      } as User;
-      vi.mocked(useAuthContext).mockReturnValue({
-        ...defaultAuthContext,
-        user: mockUser,
-      });
-      render(<ProfileMenu />);
+    it("renders the trigger button when logged in", () => {
+      const mockUser: User = { id: "123", email: "test@example.com" } as User;
+      vi.mocked(useAuthContext).mockReturnValue({ ...defaultAuthContext, user: mockUser });
+      renderMenu();
       expect(screen.getByRole("button")).toBeInTheDocument();
       expect(screen.getByLabelText(/account/i)).toBeInTheDocument();
     });
 
-    it("should open menu when trigger button is clicked", async () => {
+    it("shows Inloggen and Registreren when the menu is opened and user is logged out", async () => {
       const user = userEvent.setup();
-      render(<ProfileMenu />);
-
-      const triggerButton = screen.getByRole("button");
-      await user.click(triggerButton);
+      renderMenu();
+      await user.click(screen.getByRole("button"));
 
       await waitFor(() => {
-        expect(screen.getByRole("menu")).toBeInTheDocument();
+        expect(screen.getByText(/inloggen/i)).toBeInTheDocument();
+        expect(screen.getByText(/registreren/i)).toBeInTheDocument();
       });
     });
 
-    it("should show sign-in options when menu is opened and user is not logged in", async () => {
-      const user = userEvent.setup();
-      render(<ProfileMenu />);
+    it("shows Uitloggen when the menu is opened and user is logged in", async () => {
+      const mockUser: User = { id: "123", email: "test@example.com" } as User;
+      vi.mocked(useAuthContext).mockReturnValue({ ...defaultAuthContext, user: mockUser });
 
-      const triggerButton = screen.getByRole("button");
-      await user.click(triggerButton);
+      const user = userEvent.setup();
+      renderMenu();
+      await user.click(screen.getByRole("button"));
 
       await waitFor(() => {
-        expect(screen.getByText(/sign in with google/i)).toBeInTheDocument();
-      });
-    });
-
-    it("should show profile info and sign-out when menu is opened and user is logged in", async () => {
-      const mockUser: User = {
-        id: "123",
-        email: "test@example.com",
-      } as User;
-      vi.mocked(useAuthContext).mockReturnValue({
-        ...defaultAuthContext,
-        user: mockUser,
-      });
-      const user = userEvent.setup();
-      render(<ProfileMenu />);
-
-      const triggerButton = screen.getByRole("button");
-      await user.click(triggerButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/sign out/i)).toBeInTheDocument();
+        expect(screen.getByText(/uitloggen/i)).toBeInTheDocument();
       });
     });
   });
 
-  describe("External anchor mode", () => {
-    it("should not render trigger button when external anchor is provided", () => {
-      const anchorEl = document.createElement("div");
-      document.body.appendChild(anchorEl);
-      render(<ProfileMenu anchorEl={anchorEl} />);
-      // Should not have the trigger button, but menu should exist
-      const buttons = screen.queryAllByRole("button");
-      // Menu might have buttons inside, but not the trigger
-      expect(buttons.length).toBeLessThanOrEqual(2); // Menu items, not trigger
+  describe("navigation", () => {
+    it("navigates to /login when Inloggen is clicked", async () => {
+      const user = userEvent.setup();
+      renderMenu();
+
+      await user.click(screen.getByRole("button"));
+      await waitFor(() => expect(screen.getByText(/inloggen/i)).toBeInTheDocument());
+
+      await user.click(screen.getByText(/inloggen/i));
+
+      expect(mockNavigate).toHaveBeenCalledWith("/login");
+    });
+
+    it("navigates to /signup when Registreren is clicked", async () => {
+      const user = userEvent.setup();
+      renderMenu();
+
+      await user.click(screen.getByRole("button"));
+      await waitFor(() => expect(screen.getByText(/registreren/i)).toBeInTheDocument());
+
+      await user.click(screen.getByText(/registreren/i));
+
+      expect(mockNavigate).toHaveBeenCalledWith("/signup");
     });
   });
 
-  describe("Sign-in interactions", () => {
-    it("should call signInWithGoogle when Google sign-in is clicked", async () => {
+  describe("sign-out", () => {
+    it("calls logout when Uitloggen is clicked", async () => {
+      const mockUser: User = { id: "123", email: "test@example.com" } as User;
+      vi.mocked(useAuthContext).mockReturnValue({ ...defaultAuthContext, user: mockUser });
+
       const user = userEvent.setup();
-      render(<ProfileMenu />);
+      renderMenu();
 
-      const triggerButton = screen.getByRole("button");
-      await user.click(triggerButton);
+      await user.click(screen.getByRole("button"));
+      await waitFor(() => expect(screen.getByText(/uitloggen/i)).toBeInTheDocument());
 
-      await waitFor(() => {
-        expect(screen.getByText(/sign in with google/i)).toBeInTheDocument();
-      });
-
-      const signInButton = screen.getByText(/sign in with google/i);
-      await user.click(signInButton);
-
-      expect(mockSignInWithGoogle).toHaveBeenCalled();
-    });
-
-    it("should call signInWithEntreefederatie when Entreefederatie sign-in is clicked", async () => {
-      const user = userEvent.setup();
-      render(<ProfileMenu />);
-
-      const triggerButton = screen.getByRole("button");
-      await user.click(triggerButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/login met schoolaccount/i)).toBeInTheDocument();
-      });
-
-      const signInButton = screen.getByText(/login met schoolaccount/i);
-      await user.click(signInButton);
-
-      expect(mockSignInWithEntreefederatie).toHaveBeenCalled();
-    });
-  });
-
-  describe("Sign-out interaction", () => {
-    it("should call logout when sign-out is clicked", async () => {
-      const mockUser: User = {
-        id: "123",
-        email: "test@example.com",
-      } as User;
-      vi.mocked(useAuthContext).mockReturnValue({
-        ...defaultAuthContext,
-        user: mockUser,
-      });
-      const user = userEvent.setup();
-      render(<ProfileMenu />);
-
-      const triggerButton = screen.getByRole("button");
-      await user.click(triggerButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/sign out/i)).toBeInTheDocument();
-      });
-
-      const signOutButton = screen.getByText(/sign out/i);
-      await user.click(signOutButton);
+      await user.click(screen.getByText(/uitloggen/i));
 
       expect(mockLogout).toHaveBeenCalled();
     });

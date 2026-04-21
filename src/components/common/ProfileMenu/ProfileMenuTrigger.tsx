@@ -17,7 +17,7 @@ export const ProfileMenuTrigger = ({ user, profile, onClick, open }: ProfileMenu
   const avatarUrl = getAvatarUrl(profile);
 
   return (
-    <Tooltip title={isLoggedIn ? "Account" : "Sign in"}>
+    <Tooltip title={isLoggedIn ? "Account" : "Inloggen"}>
       <IconButton
         onClick={onClick}
         size="small"

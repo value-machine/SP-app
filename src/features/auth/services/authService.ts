@@ -1,19 +1,29 @@
 import { getSupabase, isSupabaseConfigured } from "@shared/services/supabaseService";
 import { queryClient } from "@shared/utils/queryClient";
-import { getEntreefederatieDomain } from "@config/entreefederatie";
 import type { User, LoginCredentials, SignUpCredentials } from "../types/auth.types";
 import { supabaseUserToUser } from "@/shared/utils/userUtils";
+import { buildAppUrl } from "@utils/appUrl";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
+
+const NOT_CONFIGURED_ERROR = new Error(
+  "Authentication requires Supabase to be configured. Please set up Supabase in the setup wizard."
+);
+
+/**
+ * Supabase returns `data.user` with an empty `identities` array when the email is already
+ * registered (anti-enumeration behaviour). We treat that as a duplicate signup.
+ */
+const isDuplicateEmailSignUp = (user: SupabaseUser | null): boolean => {
+  if (!user) return false;
+  const identities = (user as SupabaseUser & { identities?: unknown[] }).identities;
+  return Array.isArray(identities) && identities.length === 0;
+};
 
 export const login = async (
   credentials: LoginCredentials
 ): Promise<{ user: User | null; error: Error | null }> => {
   if (!isSupabaseConfigured()) {
-    return {
-      user: null,
-      error: new Error(
-        "Authentication requires Supabase to be configured. Please set up Supabase in the setup wizard."
-      ),
-    };
+    return { user: null, error: NOT_CONFIGURED_ERROR };
   }
 
   try {
@@ -26,9 +36,7 @@ export const login = async (
       return { user: null, error };
     }
 
-    // Filter out anonymous users using shared utility
     const user = supabaseUserToUser(data.user);
-
     return { user, error: null };
   } catch (error) {
     return {
@@ -42,27 +50,30 @@ export const signUp = async (
   credentials: SignUpCredentials
 ): Promise<{ user: User | null; error: Error | null }> => {
   if (!isSupabaseConfigured()) {
-    return {
-      user: null,
-      error: new Error(
-        "Authentication requires Supabase to be configured. Please set up Supabase in the setup wizard."
-      ),
-    };
+    return { user: null, error: NOT_CONFIGURED_ERROR };
   }
 
   try {
     const { data, error } = await getSupabase().auth.signUp({
       email: credentials.email,
       password: credentials.password,
+      options: {
+        emailRedirectTo: buildAppUrl(),
+      },
     });
 
     if (error) {
       return { user: null, error };
     }
 
-    // Filter out anonymous users using shared utility
-    const user = supabaseUserToUser(data.user);
+    if (isDuplicateEmailSignUp(data.user)) {
+      return {
+        user: null,
+        error: new Error("Dit e-mailadres is al geregistreerd. Log in of reset je wachtwoord."),
+      };
+    }
 
+    const user = supabaseUserToUser(data.user);
     return { user, error: null };
   } catch (error) {
     return {
@@ -74,7 +85,7 @@ export const signUp = async (
 
 export const logout = async (): Promise<{ error: Error | null }> => {
   if (!isSupabaseConfigured()) {
-    return { error: null }; // No-op when Supabase not configured
+    return { error: null };
   }
 
   try {
@@ -93,7 +104,6 @@ export const getCurrentUser = async (): Promise<{
   error: Error | null;
 }> => {
   if (!isSupabaseConfigured()) {
-    // Return no user when Supabase is not configured (no error)
     return { user: null, error: null };
   }
 
@@ -107,9 +117,7 @@ export const getCurrentUser = async (): Promise<{
       return { user: null, error };
     }
 
-    // Filter out anonymous users using shared utility
     const user = supabaseUserToUser(authUser);
-
     return { user, error: null };
   } catch (error) {
     return {
@@ -120,89 +128,51 @@ export const getCurrentUser = async (): Promise<{
 };
 
 /**
- * Sign in with Google OAuth
+ * Send a password-reset email. Supabase always returns success (anti-enumeration);
+ * surface a neutral message in the UI.
  */
-export const signInWithGoogle = async (): Promise<{ error: Error | null }> => {
+export const resetPasswordForEmail = async (email: string): Promise<{ error: Error | null }> => {
   if (!isSupabaseConfigured()) {
-    return {
-      error: new Error(
-        "Authentication requires Supabase to be configured. Please set up Supabase in the setup wizard."
-      ),
-    };
+    return { error: NOT_CONFIGURED_ERROR };
   }
 
   try {
-    // Clean URL hash before OAuth to prevent double-hash issue
-    // Redirect to callback page which will handle the code exchange
-    const redirectUrl = `${window.location.origin}/auth/callback`;
-
-    const { error: signInError } = await getSupabase().auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: redirectUrl,
-      },
+    const { error } = await getSupabase().auth.resetPasswordForEmail(email, {
+      redirectTo: buildAppUrl("update-password"),
     });
-
-    if (signInError) {
-      return { error: signInError };
-    }
-
-    // Auth state change handler will update user
-    return { error: null };
+    return { error: error || null };
   } catch (error) {
     return {
-      error: error instanceof Error ? error : new Error("Failed to sign in with Google"),
+      error: error instanceof Error ? error : new Error("Failed to send reset email"),
     };
   }
 };
 
 /**
- * Sign in with Entreefederatie SAML SSO
+ * Update the password for the currently signed-in (or password-recovery) session.
  */
-export const signInWithEntreefederatie = async (): Promise<{ error: Error | null }> => {
+export const updatePassword = async (newPassword: string): Promise<{ error: Error | null }> => {
   if (!isSupabaseConfigured()) {
-    return {
-      error: new Error(
-        "Authentication requires Supabase to be configured. Please set up Supabase in the setup wizard."
-      ),
-    };
+    return { error: NOT_CONFIGURED_ERROR };
   }
 
   try {
-    // Redirect to callback page which will handle the code exchange
-    const redirectUrl = `${window.location.origin}/auth/callback`;
-
-    const { data, error: ssoError } = await getSupabase().auth.signInWithSSO({
-      domain: getEntreefederatieDomain(),
-      options: {
-        redirectTo: redirectUrl,
-      },
-    });
-
-    if (ssoError) {
-      return { error: ssoError };
-    }
-
-    if (data?.url) {
-      // Redirect to Entreefederatie SAML endpoint
-      window.location.href = data.url;
-      return { error: null };
-    } else {
-      return { error: new Error("No redirect URL returned from SAML SSO") };
-    }
+    const { error } = await getSupabase().auth.updateUser({ password: newPassword });
+    return { error: error || null };
   } catch (error) {
     return {
-      error: error instanceof Error ? error : new Error("Failed to sign in with Entreefederatie"),
+      error: error instanceof Error ? error : new Error("Failed to update password"),
     };
   }
 };
 
 /**
- * Sign in anonymously (for visitors who haven't logged in)
+ * Sign in anonymously (for visitors who haven't logged in).
+ * Used so public RLS reads continue to work.
  */
 export const signInAnonymously = async (): Promise<{ error: Error | null }> => {
   if (!isSupabaseConfigured()) {
-    return { error: null }; // No-op when Supabase not configured
+    return { error: null };
   }
 
   try {
@@ -216,13 +186,11 @@ export const signInAnonymously = async (): Promise<{ error: Error | null }> => {
 };
 
 /**
- * Exchange authorization code for session (used in OAuth/SAML callback)
+ * Exchange authorization code for a session (used in optional email-confirmation PKCE callback).
  */
 export const exchangeCodeForSession = async (code: string): Promise<{ error: Error | null }> => {
   if (!isSupabaseConfigured()) {
-    return {
-      error: new Error("Supabase is not configured"),
-    };
+    return { error: new Error("Supabase is not configured") };
   }
 
   try {

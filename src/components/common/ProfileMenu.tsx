@@ -15,7 +15,7 @@ interface ProfileMenuProps {
 
 /**
  * ProfileMenu component for displaying user account information and sign-in options.
- * Shows sign-in buttons when user is not logged in, and profile/logout when logged in.
+ * Shows sign-in/sign-up entries when logged out, and profile/logout when logged in.
  */
 export const ProfileMenu = ({
   anchorEl: externalAnchorEl,
@@ -30,7 +30,7 @@ export const ProfileMenu = ({
     externalOnClose,
   });
 
-  const { handleSignIn, handleSignInEntreefederatie, handleSignOut } = useProfileMenuHandlers({
+  const { handleNavigateToLogin, handleNavigateToSignup, handleSignOut } = useProfileMenuHandlers({
     onClose: handleClose,
   });
 
@@ -41,10 +41,9 @@ export const ProfileMenu = ({
       user={user}
       profile={profile}
       profileLoading={profileLoading}
-      onSignInWithGoogle={handleSignIn}
-      onSignInWithEntreefederatie={handleSignInEntreefederatie}
+      onNavigateToLogin={handleNavigateToLogin}
+      onNavigateToSignup={handleNavigateToSignup}
       onSignOut={handleSignOut}
-      entreefederatieEnabled={true}
     />
   );
 

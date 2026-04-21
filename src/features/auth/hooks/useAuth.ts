@@ -12,8 +12,8 @@ interface UseAuthReturn {
   login: (credentials: LoginCredentials) => Promise<void>;
   signUp: (credentials: SignUpCredentials) => Promise<void>;
   logout: () => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signInWithEntreefederatie: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ ok: boolean }>;
+  updatePassword: (newPassword: string) => Promise<{ ok: boolean }>;
 }
 
 export const useAuth = (): UseAuthReturn => {
