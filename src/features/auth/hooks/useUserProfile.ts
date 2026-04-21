@@ -11,7 +11,7 @@ interface UseUserProfileReturn {
 }
 
 /**
- * Hook to fetch user profile data from the users table.
+ * Hook to fetch person profile data from the `people` table (via `user_id`).
  * Wrapper around useUserProfileQuery for backward compatibility.
  *
  * @deprecated Prefer useUserProfileQuery for new code. This wrapper is kept for existing consumers.

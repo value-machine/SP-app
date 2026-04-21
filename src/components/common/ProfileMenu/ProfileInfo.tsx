@@ -29,7 +29,7 @@ export const ProfileInfo = ({ user, profile, profileLoading }: ProfileInfoProps)
           {avatarInitial || <PersonIcon />}
         </Avatar>
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <ProfileName displayName={displayName} isVerified={profile?.email_verified ?? false} />
+          <ProfileName displayName={displayName} isVerified={false} />
           {showEmail && <ProfileEmail email={user.email!} />}
           {profileLoading && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>

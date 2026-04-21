@@ -1,4 +1,6 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+
+import type { Database } from "@/shared/types/database.types";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 // Support both publishable key (new) and anon key (legacy) for backward compatibility
@@ -8,7 +10,7 @@ const supabaseAnonKey =
 const TEST_BYPASS_URL = "https://test-local.supabase.co";
 const TEST_BYPASS_KEY = "test-anon-key-for-local-testing";
 
-let supabase: SupabaseClient | null = null;
+let supabase: SupabaseClient<Database> | null = null;
 
 /**
  * Check if Supabase is configured
@@ -28,13 +30,13 @@ export const isSupabaseConfigured = (): boolean => {
 /**
  * Initialize Supabase client if configured
  */
-export const initSupabase = (): SupabaseClient | null => {
+export const initSupabase = (): SupabaseClient<Database> | null => {
   if (!isSupabaseConfigured() || !supabaseUrl || !supabaseAnonKey) {
     return null;
   }
 
   if (!supabase) {
-    supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -51,7 +53,7 @@ export const initSupabase = (): SupabaseClient | null => {
 /**
  * Get Supabase client (throws if not configured)
  */
-export const getSupabase = (): SupabaseClient => {
+export const getSupabase = (): SupabaseClient<Database> => {
   if (!isSupabaseConfigured() || !supabaseUrl || !supabaseAnonKey) {
     throw new Error(
       "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
@@ -59,7 +61,7 @@ export const getSupabase = (): SupabaseClient => {
   }
 
   if (!supabase) {
-    supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -85,7 +87,7 @@ export const testSupabaseConnection = async (
   }
 
   try {
-    const testClient = createClient(url, key, {
+    const testClient = createClient<Database>(url, key, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,

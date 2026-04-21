@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-04-20
+
+### Added
+
+- **Supabase schema (migrations)**: `public.people` (with auth sync triggers), `organisatie_sections`, `organisatie_groups`, `group_memberships`, `responsibilities`, `responsibility_subtasks`, `responsibility_assignees`; RLS (public read, admin write via `people.is_admin`); seed for werkgroepen content
+- **Werkgroepen data from Supabase**: `/werkgroepen` loads via TanStack Query (`useWerkgroepenQuery`), markdown rendering (`MarkdownContent`), responsibilities list with optional subtasks and assignees
+- **`src/shared/types/database.types.ts`**: typed `SupabaseClient<Database>`
+
+### Changed
+
+- **Profiles**: `userProfileService` reads/writes `public.people` by `user_id` (auth id); `UserProfile` type aligned to people columns; profile menu shows Admin chip from `is_admin` only
+
+### Fixed
+
+- **`validate:feature-docs:staged`**: Treat `src/features/*/api/` as a layer of the flat feature (with `hooks/`, `services/`, etc.) so changes under `api/` require the parent feature `README.md`, not a separate `api/README.md`.
+
+### Removed
+
+- **Legacy `public.users` table** (migration) and static `werkgroepenStaticData.ts`
+
 ## [0.15.1] - 2026-03-30
 
 ### Added

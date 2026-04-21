@@ -1,71 +1,59 @@
 import { getSupabase } from "@shared/services/supabaseService";
 import type { UserProfile } from "../types/auth.types";
 
-const USER_PROFILE_FIELDS = `
+const PERSON_PROFILE_FIELDS = `
   id,
+  full_name,
   email,
-  display_name,
+  phone,
   photo_url,
-  email_verified,
-  disabled,
-  role,
-  provider_ids,
-  creation_time,
-  last_sign_in_time,
-  updated_at,
-  remaining_credits,
-  credit_period,
-  auth_provider,
-  ef_nl_edu_person_home_organization,
-  ef_nl_edu_person_home_organization_id,
-  total_messages,
-  total_tokens,
-  total_cost,
-  settings
+  notes,
+  user_id,
+  is_admin,
+  created_at,
+  updated_at
 `;
 
 /**
- * Fetches user profile from the users table.
+ * Fetches person profile from `public.people` by auth user id (`user_id`).
  * Returns null if no row (PGRST116); throws on other errors.
  */
-export const fetchUserProfile = async (userId: string): Promise<UserProfile | null> => {
+export const fetchUserProfile = async (authUserId: string): Promise<UserProfile | null> => {
   const { data, error } = await getSupabase()
-    .from("users")
-    .select(USER_PROFILE_FIELDS)
-    .eq("id", userId)
-    .single();
+    .from("people")
+    .select(PERSON_PROFILE_FIELDS)
+    .eq("user_id", authUserId)
+    .maybeSingle();
 
   if (error) {
-    if (error.code === "PGRST116") {
-      return null;
-    }
     throw new Error(error.message);
   }
 
-  return data as UserProfile;
+  return data as UserProfile | null;
 };
 
-/** Partial profile data for updates (excludes id) */
-export type UserProfileUpdate = Partial<Omit<UserProfile, "id">>;
+/** Partial profile data for updates (excludes id and auth link) */
+export type UserProfileUpdate = Partial<
+  Pick<UserProfile, "full_name" | "email" | "phone" | "photo_url" | "notes">
+>;
 
 /**
- * Updates user profile in the users table.
- * Invalidates the profile query via TanStack Query (caller's responsibility).
+ * Updates person profile in `public.people` for the given auth user id.
  */
 export const updateUserProfile = async (
-  userId: string,
+  authUserId: string,
   data: UserProfileUpdate
 ): Promise<UserProfile | null> => {
   const { data: updated, error } = await getSupabase()
-    .from("users")
+    .from("people")
     .update(data)
-    .eq("id", userId)
-    .select(USER_PROFILE_FIELDS)
-    .single();
+    .eq("user_id", authUserId)
+    .select(PERSON_PROFILE_FIELDS)
+    .maybeSingle();
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return updated as UserProfile;
+  return updated as UserProfile | null;
 };
